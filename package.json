@@ -1,0 +1,29 @@
+{
+  "name": "sweeney",
+  "version": "0.0.0",
+  "description": "💈 a blog-aware, static site generator",
+  "author": "Gabriel J. Csapo <gabecsapo@gmail.com>",
+  "license": "Apache-2.0",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gabrielcsapo/sweeney.git"
+  },
+  "bugs": {
+    "url": "https://github.com/gabrielcsapo/sweeney/issues"
+  },
+  "homepage": "https://github.com/gabrielcsapo/sweeney#readme",
+  "scripts": {
+    "lint": "eslint .",
+    "test": "tape test/**.js",
+    "coverage": "tap test --coverage --coverage-report=lcov"
+  },
+  "bin": {
+    "sweeney": "./bin/sweeney.js"
+  },
+  "devDependencies": {
+    "eslint": "^4.11.0",
+    "tap": "^10.7.3",
+    "tape": "^4.8.0"
+  }
+}

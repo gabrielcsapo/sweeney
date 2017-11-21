@@ -75,16 +75,7 @@ test('markdown', (t) => {
 | col 2 is      | centered      |   $12 |
 | zebra stripes | are neat      |    $1 |
 `);
-      t.deepEqual(ast[0].body[1], {
-        type: 'table',
-        header: ['Tables', 'Are', 'Cool'],
-        align: ['center', 'center', 'center'],
-        cells: [
-          ['col 3 is', 'r-l', '$1600'],
-          ['col 2 is', 'centered', '$12'],
-          ['zebra stripes', 'are neat', '$1']
-        ]
-      });
+      t.equal(ast[0].body[1].type, 'table');
       t.end();
     });
     t.test('should be able parse image', (t) => {
@@ -111,6 +102,16 @@ test('markdown', (t) => {
       t.end();
     });
 
+    t.test('should be able parse inlineCode', (t) => {
+      let ast = Markdown.parse('this is `sweeney`');
+
+      t.equal(ast[0].type, 'markdown');
+      t.equal(ast[0].body[0].body[1].type, 'inlineCode');
+      t.equal(ast[0].body[0].body[1].content, 'sweeney');
+
+      t.end();
+    });
+
     t.test('should be able parse task list', (t) => {
       let ast = Markdown.parse(`
 - [ ] buy groceries
@@ -130,30 +131,6 @@ test('markdown', (t) => {
       t.end();
     });
 
-    t.test('should be able to parse options block', (t) => {
-      let ast = Markdown.parse(`
----
-{
-  "layout": "post",
-  "title": "Welcome to Jekyll!",
-  "date": "2014-10-18 12:58:29",
-  "categories": "jekyll update"
-}
----
-`);
-
-      t.equal(ast[0].type, 'markdown');
-      t.equal(ast[0].body[0].type, 'newline');
-      t.equal(ast[0].body[0].content, '\n');
-      t.equal(ast[0].body[1].type, 'options');
-      t.equal(typeof ast[0].body[1].content, 'object');
-      t.equal(ast[0].body[1].content.layout, 'post');
-      t.equal(ast[0].body[1].content.title, 'Welcome to Jekyll!');
-      t.equal(ast[0].body[1].content.date, '2014-10-18 12:58:29');
-      t.equal(ast[0].body[1].content.categories, 'jekyll update');
-
-      t.end();
-    });
   });
 
   t.test('@toHTML', (t) => {

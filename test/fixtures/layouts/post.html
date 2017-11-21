@@ -1,12 +1,18 @@
+---
+{
+  "layout": "default"
+}
+---
 <div class="post">
 
   <header class="post-header">
     <h1 class="post-title">{{ post.title }}</h1>
     <p class="post-meta">{{ post.date }} {{ post.author }} {{ post.meta }}</p>
+    <small class="post-tags">{{ post.tags.join(', ') }}</small>
   </header>
 
   <article class="post-content">
-    {{ content }}
+    {{ post.content }}
   </article>
 
 </div>

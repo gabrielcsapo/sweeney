@@ -2,6 +2,8 @@ const fs = require('fs');
 const path = require('path');
 const test = require('tape');
 
+const { parse } = require('../lib/util');
+
 const Markdown = require('../lib/markdown');
 const template = require('../lib/template');
 
@@ -52,30 +54,20 @@ test('template', (t) => {
         }]
       },
       content: '<b>hello world</b>'
-    }, path.resolve(__dirname, 'fixtures', 'layouts'));
+    }, path.resolve(__dirname, 'fixtures', 'layouts'), path.resolve(__dirname, 'fixtures', 'site'));
 
     t.ok(typeof html === 'string');
     t.end();
   });
 
   t.test('should be able to render template from file', (t) => {
-    const layout = fs.readFileSync(path.resolve(__dirname, 'fixtures', 'layouts', 'post.html')).toString('utf8');
+    const layout = parse(fs.readFileSync(path.resolve(__dirname, 'fixtures', 'layouts', 'post.html')).toString('utf8'));
+    const { options, content } = parse(fs.readFileSync(path.resolve(__dirname, 'fixtures', 'posts', '2017-11-20-welcome-to-sweeney.md')).toString('utf8'));
 
-    const post = Markdown.parse(fs.readFileSync(path.resolve(__dirname, 'fixtures', 'posts', '2014-10-18-welcome-to-jekyll.md')).toString('utf8'));
+    options.content = Markdown.toHTML(Markdown.parse(content));
 
-    let options = {
-      post: post[0].body[0].content,
-      content: Markdown.toHTML(post)
-    };
-
-    const html = template(layout, options, path.resolve(__dirname, 'fixtures', 'layouts'));
-    t.equal(html, `<div class="post">    <header class="post-header">     <h1 class="post-title">Welcome to Jekyll!</h1>     <p class="post-meta">2014-10-18 12:58:29  </p>   </header>    <article class="post-content">     <br/><br/><p>
-            You’ll find this post in your \`_posts\` directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run \`jekyll serve --watch\`, which launches a web server and auto-regenerates your site when a file is updated.
-          </p><br/><br/><p>
-            To add new posts, simply add a file in the \`_posts\` directory that follows the convention \`YYYY-MM-DD-name-of-post.ext\` and includes the necessary front matter. Take a look at the source for this post to get an idea about how it works.
-          </p><br/><br/><p>
-            Check out the <a type="link" href="jekyll">Jekyll docs</a> for more info on how to get the most out of Jekyll. File all bugs/feature requests at <a type="link" href="jekyll-gh">Jekyll’s GitHub repo</a>. If you have questions, you can ask them on <a type="link" href="jekyll-help">Jekyll’s dedicated Help repository</a>.
-          </p><br/>   </article>  </div> `);
+    const html = template(layout.content, { post: options }, path.resolve(__dirname, 'fixtures', 'layouts'), path.resolve(__dirname, 'fixtures', 'layouts'));
+    t.equal(html, '<div class="post">    <header class="post-header">     <h1 class="post-title">Welcome to Sweeney!</h1>     <p class="post-meta">2017-11-20 12:58:29  </p>     <small class="post-tags">sweeney, example</small>   </header>    <article class="post-content">     <br/><p>\n            You’ll find this post in your <code>_posts</code> directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run <code>sweeney serve --watch</code>, which launches a web server and auto-regenerates your site when a file is updated.\n          </p><br/><br/><p>\n            To add new posts, simply add a file in the <code>_posts</code> directory that follows the convention <code>YYYY-MM-DD-name-of-post.ext</code> and includes the necessary front matter. Take a look at the source for this post to get an idea about how it works.\n          </p><br/><br/><table>\n            <tr>\n              <th><p>\n            before\n          </p></th><th><p>\n            after\n          </p></th>\n            <tr>\n            <tr>\n                  <td><p>\n            <code>hard</code>\n          </p></td><td><p>\n            <code>easy</code>\n          </p></td>\n                </tr>\n          </table><p>\n            Check out the <a type="link" href="https://github.com/gabrielcsapo/sweeney">Sweeney docs</a> for more info on how to get the most out of Sweeney. File all bugs/feature requests at <a type="link" href="https://github.com/gabrielcsapo/sweeney">Sweeney’s GitHub repo</a>.\n          </p><br/>   </article>  </div> ');
     t.end();
   });
 

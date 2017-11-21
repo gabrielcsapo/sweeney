@@ -2,6 +2,7 @@ module.exports = {
   source: './',
   output: './docs',
   site: {
+    main: './index.html',
     title: 'template',
     description: 'this is a template site',
     user: {
@@ -10,9 +11,11 @@ module.exports = {
       twitter_username: '@gabrielcsapo'
     },
     pages: [{
+      title: 'About',
+      url: './about.html'
+    }, {
       title: 'Source',
       url: 'http://github.com/gabrielcsapo/sweeney'
     }]
-  },
-  content: '<b>hello world</b>'
+  }
 };

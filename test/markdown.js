@@ -131,6 +131,18 @@ test('markdown', (t) => {
       t.end();
     });
 
+    t.test('should be able to parse code block', (t) => {
+      let ast = Markdown.parse(`
+\`\`\`
+hello world
+
+how are you?!
+\`\`\`
+`);
+      t.equal(ast[0].body[1].type, 'codeBlock');
+      t.end();
+    });
+
   });
 
   t.test('@toHTML', (t) => {

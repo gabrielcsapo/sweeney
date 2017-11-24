@@ -1,7 +1,7 @@
 {
   "name": "sweeney",
-  "version": "0.0.1",
-  "description": "💈 a blog-aware, static site generator",
+  "version": "0.0.2",
+  "description": "💈 a blog aware, static site generator",
   "author": "Gabriel J. Csapo <gabecsapo@gmail.com>",
   "license": "Apache-2.0",
   "main": "index.js",

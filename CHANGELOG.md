@@ -1,3 +1,16 @@
+# 0.0.2 (11/21/2017)
+
+- adds `serve` command that starts up an http server and serves content from the site directory
+- adds `--watch` option that will start a watch process that will build on any changes to the site, excluding the `site` directory
+  - if `--watch` is used in tandem with `serve` javascript will executed in the body to refresh the page in case of any builds happen
+- adds `--port` option that allows the serve command to use a specified port, by default this is random
+- adds a `help` command
+- if `config.output` is set, generate will favor that instead of the default which is `{site}/site`
+- if `config.output` is set `serve` will use that instead of the default which is `{site}/site`
+if `config.output` is set when built the console output will reflect the built directory
+- parses code blocks correctly
+- adds a `new` command to bootstrap basic template in the cwd
+
 # 0.0.1 (11/21/2017)
 
 - adds `build` command can be run as `build` or `build --directory=./some/directory`

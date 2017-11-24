@@ -1,6 +1,6 @@
 # sweeney
 
-> 💈 a blog-aware, static site generator
+> 💈 a blog aware, static site generator
 
 [![Npm Version](https://img.shields.io/npm/v/sweeney.svg)](https://www.npmjs.com/package/sweeney)
 [![Build Status](https://travis-ci.org/gabrielcsapo/sweeney.svg?branch=master)](https://travis-ci.org/gabrielcsapo/sweeney)
@@ -18,8 +18,19 @@ npm install sweeney -g
 
 ## Usage
 
-> work in progress!
+```
+Usage: sweeney [options]
 
-## Philosophy 🧠
+Commands:
 
-> a zero dependency tool
+  new [name]  bootstrap a new project with in the directory named
+  build       build and output static files to site directory
+  serve       generates a http server to serve content from the site directory
+  help        displays this screen
+
+Options:
+
+  --port={Number}     overrides the randomized port for serve
+  --directory={Path}  overrides the default path which is the current working directory
+  --watch             will watch the directory used to generate site and build when changes are made. If this is used in tandem with serve, it will inject javascript to reload the page when changes were made.
+```

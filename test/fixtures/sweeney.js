@@ -1,6 +1,10 @@
 module.exports = {
   source: './',
-  output: './docs',
+  output: '../../docs',
+  projects: [{
+    name: 'sweeney',
+    description: '💈 a blog aware, static site generator'
+  }],
   site: {
     main: './index.html',
     title: 'template',
@@ -13,6 +17,9 @@ module.exports = {
     pages: [{
       title: 'About',
       url: './about.html'
+    }, {
+      title: 'Projects',
+      url: './projects.html'
     }, {
       title: 'Source',
       url: 'http://github.com/gabrielcsapo/sweeney'

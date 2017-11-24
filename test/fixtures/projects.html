@@ -1,0 +1,14 @@
+---
+{
+  "layout": "default",
+  "title": "Projects"
+}
+---
+
+<div>
+  <h1>Projects</h1>
+  <small> here are some projects </small>
+  <br/>
+  <br/>
+  <ul> {{ projects.map((project) => `<li><a href="#">${project.name}</a> ${project.description}</li>`)}}
+</div>

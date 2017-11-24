@@ -1,4 +1,1 @@
 - [ ] support markdown footnotes
-- [ ] add `serve` command to be able to generate a http server to show realtime changes
-- [ ] add `new` command to bootstrap a template application in the given directory
-- [ ] add `build` command which should use the sweeney.js file to build the site

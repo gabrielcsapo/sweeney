@@ -1,6 +1,6 @@
 {
   "name": "sweeney",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "💈 a blog aware, static site generator",
   "author": "Gabriel J. Csapo <gabecsapo@gmail.com>",
   "license": "Apache-2.0",
@@ -22,8 +22,8 @@
     "sweeney": "./bin/sweeney.js"
   },
   "devDependencies": {
-    "eslint": "^4.11.0",
-    "tap": "^10.7.3",
+    "eslint": "^4.12.1",
+    "tap": "^11.0.0",
     "tape": "^4.8.0"
   }
 }

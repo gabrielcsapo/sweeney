@@ -1,3 +1,8 @@
+# 0.0.3 (12/01/2017)
+
+- greatly improves the command line options and utility
+- removes qs
+
 # 0.0.2 (11/21/2017)
 
 - adds `serve` command that starts up an http server and serves content from the site directory

@@ -23,14 +23,14 @@ Usage: sweeney [options]
 
 Commands:
 
-  new [name]  bootstrap a new project with in the directory named
-  build       build and output static files to site directory
-  serve       generates a http server to serve content from the site directory
-  help        displays this screen
+  -n, --new, new [name]  bootstrap a new project with in the directory named
+  -b, --build, build     build and output static files to site directory
+  -s, --serve, serve     generates a http server to serve content from the site directory
+  -h, --help, help       displays this screen
+  -w, --watch, watch     will watch the directory used to generate site and build when changes are made. If this is used in tandem with serve, it will inject javascript to reload the page when changes were made.
 
 Options:
 
-  --port={Number}     overrides the randomized port for serve
-  --directory={Path}  overrides the default path which is the current working directory
-  --watch             will watch the directory used to generate site and build when changes are made. If this is used in tandem with serve, it will inject javascript to reload the page when changes were made.
+  -p, --port [port]          overrides the randomized port for serve
+  -d, --directory [path]     overrides the default path which is the current working directory
 ```

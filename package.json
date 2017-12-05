@@ -1,6 +1,6 @@
 {
   "name": "sweeney",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "💈 a blog aware, static site generator",
   "author": "Gabriel J. Csapo <gabecsapo@gmail.com>",
   "license": "Apache-2.0",
@@ -25,5 +25,8 @@
     "eslint": "^4.12.1",
     "tap": "^11.0.0",
     "tape": "^4.8.0"
+  },
+  "dependencies": {
+    "markdown-it": "^8.4.0"
   }
 }

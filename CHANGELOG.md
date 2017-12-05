@@ -1,3 +1,9 @@
+# 0.0.4 (12/04/2017)
+
+- fixes watch option to work correctly with serve
+- fixes bug if `sweeney.js` file does not exist program will crash
+- uses markdown-it package instead of rolling one
+
 # 0.0.3 (12/01/2017)
 
 - greatly improves the command line options and utility

@@ -106,7 +106,12 @@ if(program.build) {
 if(program.serve) {
   try {
     const directory = path.resolve(process.cwd(), program.directory || './');
-    const config = require(path.resolve(directory, 'sweeney.js'));
+    let config = {};
+    try {
+      config = require(path.resolve(directory, 'sweeney.js'));
+    } catch(ex) {
+      console.log(`no sweeney.js found at ${directory}`); // eslint-disable-line
+    }
 
     const server = http.createServer((req, res) => {
       if(req.url === '/__api/update') {
@@ -159,9 +164,14 @@ if(program.serve) {
   }
 }
 
-if(program.watch && !program.serve) {
+if(program.watch) {
   const directory = path.resolve(process.cwd(), program.directory || './');
-  let config = require(path.resolve(directory, 'sweeney.js'));
+  let config = {};
+  try {
+    config = require(path.resolve(directory, 'sweeney.js'));
+  } catch(ex) {
+    console.log(`no sweeney.js found at ${directory}`); // eslint-disable-line
+  }
 
   console.log(`watching ${path.resolve(process.cwd(), program.directory || './')}`); // eslint-disable-line
   fs.watch(directory, {

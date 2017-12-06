@@ -105,6 +105,16 @@ if(program.build) {
 
 if(program.serve) {
   try {
+    const extensions = {
+      "html": "text/html",
+      "css": "text/css",
+      "js": "application/javascript",
+      "png": "image/png",
+      "gif": "image/gif",
+      "jpg": "image/jpeg",
+      "jpeg": "image/jpeg",
+      "svg": "image/svg+xml"
+    };
     const directory = path.resolve(process.cwd(), program.directory || './');
     let config = {};
     try {
@@ -124,10 +134,10 @@ if(program.serve) {
 
       try {
         // removing the leading / from the file name
-        let contents = fs.readFileSync(path.resolve(directory, (config.output || 'site'), file.substr(1, file.length))).toString('utf8');
+        let contents = fs.readFileSync(path.resolve(directory, (config.output || 'site'), file.substr(1, file.length)));
         // inject javascript into the page to refresh it in the case that a new build occurs
         if(ext == 'html' && program.watch !== undefined) {
-          contents = contents.replace('</body>', `<script>
+          contents = contents.toString('utf8').replace('</body>', `<script>
             (function() {
               var build = "${build}";
               var d = document.createElement('div');
@@ -151,6 +161,10 @@ if(program.serve) {
             }());
           </script></body>`);
         }
+        res.writeHead(200, {
+          'Content-Type': extensions[ext],
+          'Content-Length' : contents.length
+        });
         res.end(contents);
       } catch(ex) {
         res.statusCode = 500;
@@ -172,21 +186,28 @@ if(program.watch) {
   } catch(ex) {
     console.log(`no sweeney.js found at ${directory}`); // eslint-disable-line
   }
+  const output = path.resolve(config.output || 'site');
 
-  console.log(`watching ${path.resolve(process.cwd(), program.directory || './')}`); // eslint-disable-line
+  console.log(`watching ${directory}`); // eslint-disable-line
   fs.watch(directory, {
     recursive: true
   }, async function(ev, file) {
-    // refresh the require cache in the case config has updated
-    if(file.indexOf('sweeney.js') > -1) {
-      delete require.cache[require.resolve(path.resolve(directory, 'sweeney.js'))];
-      config = require(path.resolve(directory, 'sweeney.js'));
-    }
-    // we don't want to rebuild the output directory because this is expected to change
-    if(path.dirname(file).indexOf((config.output || 'site')) === -1) {
-      console.log(`rebuilding because of ${ev} of ${file}`); // eslint-disable-line
-      await generate(directory, config);
-      build = Date.now();
+    try {
+      // refresh the require cache in the case config has updated
+      if(file.indexOf('sweeney.js') > -1) {
+        delete require.cache[require.resolve(path.resolve(directory, 'sweeney.js'))];
+        config = require(path.resolve(directory, 'sweeney.js'));
+      }
+
+      // we don't want to rebuild the output directory because this is expected to change
+      if(file.substring(0, file.lastIndexOf('/')) !== output.substring(output.lastIndexOf('/') + 1, output.length) && file.indexOf('.git') === -1) {
+        console.log(`rebuilding because of ${ev} of ${file}`); // eslint-disable-line
+        await generate(directory, config);
+        build = Date.now();
+      }
+    } catch(ex) {
+      console.log(ex.stack)
+      console.log(`uhoh something happened \n ${ex.toString()}`); // eslint-disable-line
     }
   });
 }

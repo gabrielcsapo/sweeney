@@ -6,7 +6,8 @@
     },
     "rules": {
       "quotes": ["error", "single"],
-      "semi": ["error", "always"]
+      "semi": ["error", "always"],
+      "no-cond-assign": 0
     },
     "parserOptions": {
       "ecmaVersion": 2017,

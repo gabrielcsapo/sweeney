@@ -8,9 +8,5 @@
 <div>
   <h1>This is a website!</h1>
 
-  <div> <h3>Checkout some of the posts</h3> </div>
-
-  <ul>
-    {{ posts.map((post) => `<li><a href="./${post.slug}"> ${post.title} </a> [${post.tags.join(',')}]</li>`) }}
-  </ul>
+  <div> <h3>Checkout some of the <a href="posts.html">posts</a></h3> </div>
 </div>

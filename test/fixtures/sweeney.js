@@ -10,13 +10,15 @@ module.exports = {
     title: 'template',
     description: 'this is a template site',
     user: {
-      email: 'gabecsapo@gmail.com',
-      github_username: '@gabrielcsapo',
-      twitter_username: '@gabrielcsapo'
+      name: 'Gabriel J. Csapo',
+      github_url: 'https://www.github.com/gabrielcsapo'
     },
     pages: [{
       title: 'About',
       url: './about.html'
+    }, {
+      title: 'Posts',
+      url: './posts.html'
     }, {
       title: 'Projects',
       url: './projects.html'

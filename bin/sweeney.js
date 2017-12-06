@@ -106,14 +106,14 @@ if(program.build) {
 if(program.serve) {
   try {
     const extensions = {
-      "html": "text/html",
-      "css": "text/css",
-      "js": "application/javascript",
-      "png": "image/png",
-      "gif": "image/gif",
-      "jpg": "image/jpeg",
-      "jpeg": "image/jpeg",
-      "svg": "image/svg+xml"
+      'html': 'text/html',
+      'css': 'text/css',
+      'js': 'application/javascript',
+      'png': 'image/png',
+      'gif': 'image/gif',
+      'jpg': 'image/jpeg',
+      'jpeg': 'image/jpeg',
+      'svg': 'image/svg+xml'
     };
     const directory = path.resolve(process.cwd(), program.directory || './');
     let config = {};
@@ -206,7 +206,6 @@ if(program.watch) {
         build = Date.now();
       }
     } catch(ex) {
-      console.log(ex.stack)
       console.log(`uhoh something happened \n ${ex.toString()}`); // eslint-disable-line
     }
   });

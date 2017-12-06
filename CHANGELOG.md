@@ -1,10 +1,15 @@
-# 0.0.5 (12/04/2017)
+# 0.0.6 (12/06/2017)
+
+- updates the default template
+- fixes lint errors
+
+# 0.0.5 (12/06/2017)
 
 - attributes can now be passed to include and be transformed into html attributes
 - removes enforcement of posts directory
 - fixes watch to not watch output directory or anything related to .git
 - serve can now serve image assets
-- alters template engine to be more reliable 
+- alters template engine to be more reliable
 
 # 0.0.4 (12/04/2017)
 

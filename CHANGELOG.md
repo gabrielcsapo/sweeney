@@ -1,3 +1,7 @@
+# Unreleased
+
+- supports config files named `sweeney.js` or `.sweeneyrc`
+
 # 0.0.6 (12/06/2017)
 
 - updates the default template

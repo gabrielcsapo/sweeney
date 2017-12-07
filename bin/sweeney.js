@@ -6,6 +6,8 @@ const path = require('path');
 const bootstrap = require('../lib/bootstrap');
 const generate = require('../lib/generate');
 
+const { getConfig } = require('../lib/util');
+
 const args = process.argv.slice(2);
 
 // this is used when establishing when a build occured
@@ -93,7 +95,7 @@ if(program.build) {
   (async function() {
     try {
       const directory = path.resolve(process.cwd(), program.directory || './');
-      const config = require(path.resolve(directory, 'sweeney.js'));
+      const config = getConfig(directory);
 
       await generate(directory, config);
       console.log(`site built at ${path.resolve(process.cwd(), program.directory || './', config.output || 'site')}`); // eslint-disable-line
@@ -116,12 +118,7 @@ if(program.serve) {
       'svg': 'image/svg+xml'
     };
     const directory = path.resolve(process.cwd(), program.directory || './');
-    let config = {};
-    try {
-      config = require(path.resolve(directory, 'sweeney.js'));
-    } catch(ex) {
-      console.log(`no sweeney.js found at ${directory}`); // eslint-disable-line
-    }
+    const config = getConfig(directory);
 
     const server = http.createServer((req, res) => {
       if(req.url === '/__api/update') {
@@ -180,12 +177,7 @@ if(program.serve) {
 
 if(program.watch) {
   const directory = path.resolve(process.cwd(), program.directory || './');
-  let config = {};
-  try {
-    config = require(path.resolve(directory, 'sweeney.js'));
-  } catch(ex) {
-    console.log(`no sweeney.js found at ${directory}`); // eslint-disable-line
-  }
+  let config = getConfig(directory);
   const output = path.resolve(config.output || 'site');
 
   console.log(`watching ${directory}`); // eslint-disable-line
@@ -197,6 +189,11 @@ if(program.watch) {
       if(file.indexOf('sweeney.js') > -1) {
         delete require.cache[require.resolve(path.resolve(directory, 'sweeney.js'))];
         config = require(path.resolve(directory, 'sweeney.js'));
+      }
+
+      if(file.indexOf('.sweenyrc') > -1) {
+        delete require.cache[require.resolve(path.resolve(directory, '.sweenyrc'))];
+        config = require(path.resolve(directory, '.sweenyrc'));
       }
 
       // we don't want to rebuild the output directory because this is expected to change

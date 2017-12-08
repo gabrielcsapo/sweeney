@@ -1,4 +1,4 @@
-# Unreleased
+# 0.0.7 (12/07/2017)
 
 - supports config files named `sweeney.js` or `.sweeneyrc`
 

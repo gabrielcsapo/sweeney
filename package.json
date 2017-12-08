@@ -1,6 +1,6 @@
 {
   "name": "sweeney",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "💈 a blog aware, static site generator",
   "author": "Gabriel J. Csapo <gabecsapo@gmail.com>",
   "license": "Apache-2.0",

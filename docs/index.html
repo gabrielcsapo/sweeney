@@ -1,1 +1,37 @@
-<!DOCTYPE html> <html>    <head>     <meta charset="utf-8">     <meta name="viewport" content="width=device-width initial-scale=1" />     <meta http-equiv="X-UA-Compatible" content="IE=edge">      <title>template</title>     <link rel="stylesheet" href="./site.css" >     <meta name="description" content="this is a template site"> </head>     <body style="display: flex;   min-height: 100vh;   flex-direction: column;   margin: 0 auto;">      <header class="site-header">   <a class="site-title" href="./index.html">template</a>    <nav class="site-nav">     <a class="page-link" href="./about.html">About</a> <a class="page-link" href="./posts.html">Posts</a> <a class="page-link" href="./projects.html">Projects</a> <a class="page-link" href="http://github.com/gabrielcsapo/sweeney">Source</a>   </nav> </header>       <div class="page-content">       <div class="wrapper">          <div>   <h1>This is a website!</h1>    <div> <h3>Checkout some of the <a href="posts.html">posts</a></h3> </div> </div>        </div>     </div>      <footer class="site-footer">    <div style="display: flex;justify-content:center;">     <div> created with ☕️ by <a href="https://www.github.com/gabrielcsapo">Gabriel J. Csapo</a> </div>   </div>  </footer>     </body>  </html> 
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>sweeney</title>
+    <link rel="stylesheet" href="./main.css">
+  </head>
+  <body>
+    <div id="container">
+      <div class="main">
+        <section>
+          <div>
+            <img src="./logo.svg" alt="Sweeney Logo" style="max-height: 190px;">
+          </div>
+          <h1>
+            sweeney
+          </h1>
+          <h3>💈 a blog aware, static site generator</h3>
+          <pre>
+            <code> npm install sweeney -g </code>
+            <code> sweeney new example </code>
+            <code> cd example </code>
+            <code> sweeney build </code>
+            <code> open site/index.html </code>
+          </pre>
+          </br>
+          <a class="button" href="https://github.com/gabrielcsapo/sweeney" target="_blank">Github</a>
+          <a class="button" href="./example/index.html">Example</a>
+          <a class="button" href="./code/index.html">Docs</a>
+        </section>
+      </div>
+    </div>
+  </body>
+</html>

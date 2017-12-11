@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>util.js - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <li class="nav-link nav-home-link"><a href="index.html">Home</a></li><li class="nav-heading">Classes</li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="Site.html">Site</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Site.html#.bootstrap">bootstrap</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Site.html#.getConfig">getConfig</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Site.html#.getTemplates">getTemplates</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Site.html#.renderTemplate">renderTemplate</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Site.html#~generate">generate</a></span></li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="Template.html">Template</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Template.html#.attributesToHTML">attributesToHTML</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Template.html#.include">include</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Template.html#.render">render</a></span></li><li class="nav-heading">Modules</li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-lib_util.html">lib/util</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-lib_util.html#~copyDirectory">copyDirectory</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-lib_util.html#~ensureDirectoryExists">ensureDirectoryExists</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-lib_util.html#~parse">parse</a></span></li>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">util.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @module lib/util
+ */
+
+const fs = require('fs');
+const path = require('path');
+
+const { promisify } = require('util');
+
+const stat = promisify(fs.stat);
+const mkdir = promisify(fs.mkdir);
+const writeFile = promisify(fs.writeFile);
+const readFile = promisify(fs.readFile);
+const readdir = promisify(fs.readdir);
+
+/**
+ * ensures the given path exists, if not recursively generates folder leading to the paths
+ * @method ensureDirectoryExists
+ * @param  {String} directory - the given path
+ */
+async function ensureDirectoryExists(directory) {
+  let parts = directory.split('/').slice(1);
+  let currentDirectory = '';
+  while(parts.length > 0) {
+    currentDirectory += `/${parts.shift()}`;
+
+    try {
+      await stat(currentDirectory);
+    } catch(ex) {
+      await mkdir(currentDirectory);
+    }
+  }
+}
+
+/**
+ * recursively copies the content of one directory to another
+ * @method copyDirectory
+ * @param  {String} source      - path to source
+ * @param  {String} destination - path to destination
+ */
+async function copyDirectory(source, destination) {
+  const stats = await stat(source);
+
+  if (stats.isDirectory()) {
+    await ensureDirectoryExists(destination);
+
+    const files = await readdir(source);
+
+    files.forEach(async function(childItemName) {
+      await copyDirectory(path.join(source, childItemName), path.join(destination, childItemName));
+    });
+  } else {
+    await writeFile(destination, await readFile(source));
+  }
+}
+
+/**
+ * parses the contents of a string to find the options block
+ * @method parse
+ * @param  {String} content - file contents that could potentially contain options
+ * @return {Object} - with the attributes options and content
+ */
+function parse(content) {
+  if (/^---\n/.test(content)) {
+    var end = content.search(/\n---\n/);
+    if (end != -1) {
+      return {
+        options: JSON.parse(content.slice(4, end + 1)) || {},
+        content: content.slice(end + 5)
+      };
+    }
+  }
+  return {
+    options: {},
+    content: content
+  };
+}
+
+/**
+ * takes ms and returns human readable time string
+ * @method ms
+ * @memberof lib/util
+ * @param  {Number} ms    - time in milleseconds
+ * @param  {String=} type - the time wanted to display
+ * @return {String}       - human readable string
+ */
+function ms(ms, type) {
+  switch(type) {
+    case 'seconds':
+      return `${Math.floor(ms / 1000)}s`;
+    case 'minutes':
+      return `${Math.floor(ms / (1000 * 60))}m`;
+    case 'hours':
+      return `${Math.floor(ms / (1000 * 60 * 60))}h`;
+    case 'days':
+      return `${Math.floor(ms / (1000 * 60 * 60 * 24))}d`;
+    case 'weeks':
+      return `${Math.floor(ms / (1000 * 60 * 60 * 24 * 7))}w`;
+    default:
+      return `${ms}ms`;
+  }
+}
+
+module.exports = {
+  parse,
+  copyDirectory,
+  ensureDirectoryExists,
+  ms
+};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

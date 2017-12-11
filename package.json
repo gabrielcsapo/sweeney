@@ -1,6 +1,6 @@
 {
   "name": "sweeney",
-  "version": "0.0.7",
+  "version": "0.1.0",
   "description": "💈 a blog aware, static site generator",
   "author": "Gabriel J. Csapo <gabecsapo@gmail.com>",
   "license": "Apache-2.0",
@@ -12,17 +12,21 @@
   "bugs": {
     "url": "https://github.com/gabrielcsapo/sweeney/issues"
   },
-  "homepage": "https://github.com/gabrielcsapo/sweeney#readme",
+  "homepage": "https://www.gabrielcsapo.com/sweeney",
   "scripts": {
     "lint": "eslint .",
-    "test": "tape test/**.js",
-    "coverage": "tap test --coverage --coverage-report=lcov"
+    "clean": "rm -rf test/tmp;",
+    "test": "npm run clean; tape test/**.js",
+    "coverage": "npm run clean; tap test --coverage --coverage-report=lcov",
+    "generate-docs": "jsdoc -c .jsdoc.json"
   },
   "bin": {
     "sweeney": "./bin/sweeney.js"
   },
   "devDependencies": {
     "eslint": "^4.12.1",
+    "jsdoc": "^3.5.5",
+    "minami": "^1.2.3",
     "tap": "^11.0.0",
     "tape": "^4.8.0"
   },

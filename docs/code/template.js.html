@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>template.js - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <li class="nav-link nav-home-link"><a href="index.html">Home</a></li><li class="nav-heading">Classes</li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="Site.html">Site</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Site.html#.bootstrap">bootstrap</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Site.html#.getConfig">getConfig</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Site.html#.getTemplates">getTemplates</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Site.html#.renderTemplate">renderTemplate</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Site.html#~generate">generate</a></span></li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="Template.html">Template</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Template.html#.attributesToHTML">attributesToHTML</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Template.html#.include">include</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Template.html#.render">render</a></span></li><li class="nav-heading">Modules</li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-lib_util.html">lib/util</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-lib_util.html#~copyDirectory">copyDirectory</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-lib_util.html#~ensureDirectoryExists">ensureDirectoryExists</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-lib_util.html#~parse">parse</a></span></li>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">template.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>const fs = require('fs');
+const path = require('path');
+
+class Template {
+  /**
+   * handles the state of a template and can render it
+   * @class Template
+   * @param  {String}    template    - a string containing the template
+   * @param  {Object}    data        - object that contains state for template
+   * @param  {String}    directory   - directory of where template if from
+   * @param  {String}    output      - the output directory to store assets
+   */
+  constructor(template, data, directory=process.cwd(), output=path.resolve(process.cwd(), 'site')) {
+    this.template = template;
+    this.data = data || {};
+    this.directory = directory;
+    this.output = output;
+  }
+  /**
+   * takes an attributes object and turns it into a html string
+   * @method attributesToHTML
+   * @memberof Template
+   * @param  {Object} attributes - an object containing the html attributes
+   * @return {String} - html attributes string
+   */
+  attributesToHTML(attributes) {
+    if (!attributes) return '';
+    return Object.keys(attributes).filter((a) => {
+      return ['content'].indexOf(a) === -1;
+    }).map((a) => {
+      return `${a}="${attributes[a]}"`;
+    }).join(' ');
+  }
+  /**
+   * includes an asset or template from within a template
+   * @method include
+   * @memberof Template
+   * @param  {String} file       - relative path from file to asset
+   * @param  {Object} attributes - object with attribute keys that will turn into html
+   * @return {String}            - compiled template or asset tag
+   */
+  include(file, attributes) {
+    const { data, directory, output, attributesToHTML } = this;
+
+    const extension = file.substr(file.lastIndexOf('.') + 1, file.length);
+    const fileName = file.substr(file.lastIndexOf('/') + 1, file.length);
+
+    switch (extension) {
+      case 'html':
+        return (new Template(fs.readFileSync(path.resolve(directory, file)).toString(), data, directory, output)).render();
+      case 'css':
+        fs.createReadStream(path.resolve(directory, file)).pipe(fs.createWriteStream(path.resolve(output, fileName)));
+        return `&lt;link rel="stylesheet" href="./${fileName}" ${attributesToHTML(attributes)}>`;
+      case 'png':
+      case 'jpeg':
+      case 'gif':
+      case 'jpg':
+      case 'svg':
+        fs.createReadStream(path.resolve(directory, file)).pipe(fs.createWriteStream(path.resolve(output, fileName)));
+        return `&lt;img src="./${fileName}" ${attributesToHTML(attributes)}>`;
+    }
+  }
+  /**
+   * renders the template to string
+   * @method render
+   * @memberof Template
+   * @return {string} - compiled template
+   */
+  render() {
+    const { template, include } = this;
+    this.data.include = include.bind(this);
+
+    var templ = template.replace(/[\r\t\n]/g, ' ');
+    var re = /{{[\s]*(.+?)[\s]*}}/g;
+    var reExp = /(^( )?(if|for|else|switch|case|break|{|}))(.*)?/g;
+    var code = 'var r=[];\n';
+    var cursor = 0;
+    var match;
+
+    function add(line, js) {
+      js ? (code += line.match(reExp) ? line + '\n' : 'r.push(' + line + ');\n') :
+        (code += line != '' ? 'r.push("' + line.replace(/"/g, '\\"') + '");\n' : '');
+      return add;
+    }
+    while (match = re.exec(templ)) {
+      add(templ.slice(cursor, match.index))(match[1], true);
+      cursor = match.index + match[0].length;
+    }
+    add(templ.substr(cursor, templ.length - cursor));
+    code += 'return r.join("");';
+    return new Function(`
+      with(this) {
+        ${code.replace(/[\r\t\n]/g, '')}
+      }
+    `).bind(this.data)();
+  }
+}
+
+module.exports = Template;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

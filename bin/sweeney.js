@@ -2,19 +2,25 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
+const { promisify } = require('util');
 
-const bootstrap = require('../lib/bootstrap');
-const generate = require('../lib/generate');
+const stat = promisify(fs.stat);
 
-const { getConfig } = require('../lib/util');
+const Site = require('../lib/site');
+
+const { ms } = require('../lib/util');
 
 const args = process.argv.slice(2);
+
+process.on('unhandledRejection', (error) => {
+  console.error(`something extremely wrong happened \n ${error.stack}`); // eslint-disable-line
+});
 
 // this is used when establishing when a build occured
 let build = Date.now();
 let program = {};
 
-args.forEach((a, i) => {
+args.forEach(async function(a, i){
   switch(a) {
   case '-v':
   case '--version':
@@ -23,10 +29,19 @@ args.forEach((a, i) => {
     break;
   case '-d':
   case '--directory':
-    if(args[i + 1]) {
-      program.directory = args[i + 1];
+    program.directory = path.resolve(args[i + 1]);
+    try {
+      const stats = await stat(program.directory);
+      stats.isDirectory(); // ensure that this is a directory
+    } catch(ex) {
+      console.error(`please provide a valid directory path. \n ${program.directory} is not a valid path.`); // eslint-disable-line
+      process.exit(1);
     }
     break;
+  case '-o':
+  case '--output':
+    program.output = path.resolve(args[i + 1]);
+  break;
   case '-p':
   case '--port':
     program.port = args[i + 1];
@@ -50,7 +65,7 @@ args.forEach((a, i) => {
 
       -p, --port [port]          overrides the randomized port for serve
       -d, --directory [path]     overrides the default path which is the current working directory
-
+      -o, --output [path]        overrides the output path
   `);
     process.exit(0);
     break;
@@ -58,7 +73,11 @@ args.forEach((a, i) => {
     case '--new':
     case 'new':
       program.new = true;
-      program.name = program.port = args[i + 1];
+      program.name = args[i + 1];
+      if(!program.name) {
+        console.error('please provide a valid name. \n sweeney new [name]'); // eslint-disable-line
+        process.exit(1);
+      }
     break;
     case '-b':
     case '--build':
@@ -81,12 +100,14 @@ args.forEach((a, i) => {
 if(program.new) {
   (async function() {
     try {
+      const start = process.hrtime();
       const directory = path.resolve(process.cwd(), program.name);
 
-      await bootstrap(directory);
-      console.log(`application bootstrapped in ${directory}`); // eslint-disable-line
+      await Site.bootstrap(directory);
+      const end = process.hrtime(start);
+      console.log(`application bootstrapped in ${directory} [${ms(((end[0] * 1e9) + end[1]) / 1e6)}]`); // eslint-disable-line
     } catch(ex) {
-      console.log(`uhoh something happened \n ${ex.toString()}`); // eslint-disable-line
+      console.log(`uhoh something happened \n ${ex}`); // eslint-disable-line
     }
   }());
 }
@@ -94,116 +115,129 @@ if(program.new) {
 if(program.build) {
   (async function() {
     try {
-      const directory = path.resolve(process.cwd(), program.directory || './');
-      const config = getConfig(directory);
+      const start = process.hrtime();
+      const directory = program.directory || process.cwd();
+      let config = await Site.getConfig(directory);
 
-      await generate(directory, config);
-      console.log(`site built at ${path.resolve(process.cwd(), program.directory || './', config.output || 'site')}`); // eslint-disable-line
+      // overrides the output
+      program.output ? config.output = program.output : '';
+
+      const site = new Site(directory, config);
+      await site.generate();
+
+      const end = process.hrtime(start);
+      console.log(`site built at ${path.resolve(directory, config.output || 'site')} [${ms(((end[0] * 1e9) + end[1]) / 1e6)}]`); // eslint-disable-line
+    } catch(ex) {
+      console.log(`uhoh something happened \n ${ex}`); // eslint-disable-line
+    }
+  }());
+}
+
+if(program.serve) {
+  (async function() {
+    try {
+      const extensions = {
+        'html': 'text/html',
+        'css': 'text/css',
+        'js': 'application/javascript',
+        'png': 'image/png',
+        'gif': 'image/gif',
+        'jpg': 'image/jpeg',
+        'jpeg': 'image/jpeg',
+        'svg': 'image/svg+xml'
+      };
+      const directory = path.resolve(process.cwd(), program.directory || './');
+      const config = await Site.getConfig(directory);
+
+      const server = http.createServer((req, res) => {
+        if(req.url === '/__api/update') {
+          res.statusCode = 200;
+          return res.end(build.toString());
+        }
+        let file = req.url || '/index.html';
+        if(file === '/') file = '/index.html';
+        let ext = file.substr(file.lastIndexOf('.') + 1, file.length);
+
+        try {
+          // removing the leading / from the file name
+          let contents = fs.readFileSync(path.resolve(directory, (config.output || 'site'), file.substr(1, file.length)));
+          // inject javascript into the page to refresh it in the case that a new build occurs
+          if(ext == 'html' && program.watch !== undefined) {
+            contents = contents.toString('utf8').replace('</body>', `<script>
+              (function() {
+                var build = "${build}";
+                var d = document.createElement('div');
+                d.innerHTML = '💈 you are currently developing this site, any changes will trigger a refresh';
+                d.style.padding = '10px';
+                d.style.textAlign = 'center';
+                d.style.borderBottom = '1px solid #e8e8e8';
+                document.body.prepend(d);
+
+                setInterval(function() {
+                  var xhttp = new XMLHttpRequest();
+                  xhttp.onreadystatechange = function() {
+                      if (this.readyState == 4 && this.status == 200) {
+                        if(this.responseText !== build) {
+                          location.reload();
+                        }
+                      }
+                  };
+                  xhttp.open("GET", "/__api/update", true);
+                  xhttp.send();
+                }, 500)
+              }());
+            </script></body>`);
+          }
+          res.writeHead(200, {
+            'Content-Type': extensions[ext],
+            'Content-Length' : contents.length
+          });
+          res.end(contents);
+        } catch(ex) {
+          res.statusCode = 500;
+          res.end();
+        }
+      }).listen(program.port, () => {
+        console.log(`sweeney listening on http://localhost:${server.address().port}`); // eslint-disable-line
+      });
     } catch(ex) {
       console.log(`uhoh something happened \n ${ex.toString()}`); // eslint-disable-line
     }
   }());
 }
 
-if(program.serve) {
-  try {
-    const extensions = {
-      'html': 'text/html',
-      'css': 'text/css',
-      'js': 'application/javascript',
-      'png': 'image/png',
-      'gif': 'image/gif',
-      'jpg': 'image/jpeg',
-      'jpeg': 'image/jpeg',
-      'svg': 'image/svg+xml'
-    };
-    const directory = path.resolve(process.cwd(), program.directory || './');
-    const config = getConfig(directory);
-
-    const server = http.createServer((req, res) => {
-      if(req.url === '/__api/update') {
-        res.statusCode = 200;
-        return res.end(build.toString());
-      }
-      let file = req.url || '/index.html';
-      if(file === '/') file = '/index.html';
-      let ext = file.substr(file.lastIndexOf('.') + 1, file.length);
-
-      try {
-        // removing the leading / from the file name
-        let contents = fs.readFileSync(path.resolve(directory, (config.output || 'site'), file.substr(1, file.length)));
-        // inject javascript into the page to refresh it in the case that a new build occurs
-        if(ext == 'html' && program.watch !== undefined) {
-          contents = contents.toString('utf8').replace('</body>', `<script>
-            (function() {
-              var build = "${build}";
-              var d = document.createElement('div');
-              d.innerHTML = '💈 you are currently developing this site, any changes will trigger a refresh';
-              d.style.padding = '10px';
-              d.style.textAlign = 'center';
-              document.body.prepend(d);
-
-              setInterval(function() {
-                var xhttp = new XMLHttpRequest();
-                xhttp.onreadystatechange = function() {
-                    if (this.readyState == 4 && this.status == 200) {
-                      if(this.responseText !== build) {
-                        location.reload();
-                      }
-                    }
-                };
-                xhttp.open("GET", "/__api/update", true);
-                xhttp.send();
-              }, 500)
-            }());
-          </script></body>`);
-        }
-        res.writeHead(200, {
-          'Content-Type': extensions[ext],
-          'Content-Length' : contents.length
-        });
-        res.end(contents);
-      } catch(ex) {
-        res.statusCode = 500;
-        res.end();
-      }
-    }).listen(program.port, () => {
-      console.log(`sweeney listening on http://localhost:${server.address().port}`); // eslint-disable-line
-    });
-  } catch(ex) {
-    console.log(`uhoh something happened \n ${ex.toString()}`); // eslint-disable-line
-  }
-}
-
 if(program.watch) {
-  const directory = path.resolve(process.cwd(), program.directory || './');
-  let config = getConfig(directory);
-  const output = path.resolve(config.output || 'site');
+  (async function() {
+    const directory = path.resolve(process.cwd(), program.directory || './');
+    let config = await Site.getConfig(directory);
+    const output = path.resolve(config.output || 'site');
 
-  console.log(`watching ${directory}`); // eslint-disable-line
-  fs.watch(directory, {
-    recursive: true
-  }, async function(ev, file) {
-    try {
-      // refresh the require cache in the case config has updated
-      if(file.indexOf('sweeney.js') > -1) {
-        delete require.cache[require.resolve(path.resolve(directory, 'sweeney.js'))];
-        config = require(path.resolve(directory, 'sweeney.js'));
-      }
+    console.log(`watching ${directory}`); // eslint-disable-line
+    fs.watch(directory, {
+      recursive: true
+    }, async function(ev, file) {
+      try {
+        // refresh the require cache in the case config has updated
+        if(file.indexOf('sweeney.js') > -1) {
+          delete require.cache[require.resolve(path.resolve(directory, 'sweeney.js'))];
+          config = require(path.resolve(directory, 'sweeney.js'));
+        }
 
-      if(file.indexOf('.sweenyrc') > -1) {
-        delete require.cache[require.resolve(path.resolve(directory, '.sweenyrc'))];
-        config = require(path.resolve(directory, '.sweenyrc'));
-      }
+        if(file.indexOf('.sweenyrc') > -1) {
+          delete require.cache[require.resolve(path.resolve(directory, '.sweenyrc'))];
+          config = require(path.resolve(directory, '.sweenyrc'));
+        }
 
-      // we don't want to rebuild the output directory because this is expected to change
-      if(file.substring(0, file.lastIndexOf('/')) !== output.substring(output.lastIndexOf('/') + 1, output.length) && file.indexOf('.git') === -1) {
-        console.log(`rebuilding because of ${ev} of ${file}`); // eslint-disable-line
-        await generate(directory, config);
-        build = Date.now();
+        // we don't want to rebuild the output directory because this is expected to change
+        if(file.substring(0, file.lastIndexOf('/')) !== output.substring(output.lastIndexOf('/') + 1, output.length) && file.indexOf('.git') === -1) {
+          console.log(`rebuilding because of ${ev} of ${file}`); // eslint-disable-line
+          const site = new Site(directory, config);
+          await site.generate();
+          build = Date.now();
+        }
+      } catch(ex) {
+        console.log(`uhoh something happened \n ${ex.toString()}`); // eslint-disable-line
       }
-    } catch(ex) {
-      console.log(`uhoh something happened \n ${ex.toString()}`); // eslint-disable-line
-    }
-  });
+    });
+  }());
 }

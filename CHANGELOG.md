@@ -1,3 +1,19 @@
+# 0.1.0 (12/07/2017)
+
+- enforces name when running `sweeney new`
+- makes bootstrap async
+  - went from ~4.28339ms to ~2.089147ms
+- makes sure template site builds to ./site instead of ../../docs
+- makes getTemplateFiles, getConfig, renderTemplates async
+  - went from ~18ms to ~12ms
+- only parses with Markdown parser if file is MD
+  - allows for md files to exist at the root level
+- all files now have a default date attribute which comes from stat.birthtime
+- ensure directory cli input is valid
+- adds an output option `-o, --output [path]`
+- condenses a lot of static methods into class definitions
+- config can now be a promise or function as well as javascript object
+
 # 0.0.7 (12/07/2017)
 
 - supports config files named `sweeney.js` or `.sweeneyrc`

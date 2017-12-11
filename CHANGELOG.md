@@ -1,4 +1,10 @@
-# 0.1.0 (12/07/2017)
+# 0.1.1 (12/10/2017)
+
+- fixes config file from being named `.sweenyrc` to `.sweeneyrc`
+- posts will expose post.* on the template page, pages will expose page.* which will reflect the options block
+- fixes the generation of output path
+
+# 0.1.0 (12/10/2017)
 
 - enforces name when running `sweeney new`
 - makes bootstrap async

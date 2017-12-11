@@ -8,7 +8,7 @@ const stat = promisify(fs.stat);
 
 const Site = require('../lib/site');
 
-const { ms } = require('../lib/util');
+const { ms, copyDirectory } = require('../lib/util');
 
 const args = process.argv.slice(2);
 
@@ -125,6 +125,13 @@ if(program.build) {
       const site = new Site(directory, config);
       await site.generate();
 
+      if(config.includes) {
+        config.includes.forEach((i) => {
+          let output = path.resolve(process.cwd(), config.output) + i.substr(i.lastIndexOf('/'), i.length);
+          copyDirectory(path.resolve(directory, i), output);
+        });
+      }
+
       const end = process.hrtime(start);
       console.log(`site built at ${path.resolve(directory, config.output || 'site')} [${ms(((end[0] * 1e9) + end[1]) / 1e6)}]`); // eslint-disable-line
     } catch(ex) {
@@ -223,9 +230,9 @@ if(program.watch) {
           config = require(path.resolve(directory, 'sweeney.js'));
         }
 
-        if(file.indexOf('.sweenyrc') > -1) {
-          delete require.cache[require.resolve(path.resolve(directory, '.sweenyrc'))];
-          config = require(path.resolve(directory, '.sweenyrc'));
+        if(file.indexOf('.sweeneyrc') > -1) {
+          delete require.cache[require.resolve(path.resolve(directory, '.sweeneyrc'))];
+          config = require(path.resolve(directory, '.sweeneyrc'));
         }
 
         // we don't want to rebuild the output directory because this is expected to change

@@ -47,13 +47,11 @@ class Template {
    * handles the state of a template and can render it
    * @class Template
    * @param  {String}    template    - a string containing the template
-   * @param  {Object}    data        - object that contains state for template
    * @param  {String}    directory   - directory of where template if from
    * @param  {String}    output      - the output directory to store assets
    */
-  constructor(template, data, directory=process.cwd(), output=path.resolve(process.cwd(), 'site')) {
+  constructor(template, directory=process.cwd(), output=path.resolve(process.cwd(), 'site')) {
     this.template = template;
-    this.data = data || {};
     this.directory = directory;
     this.output = output;
   }
@@ -80,24 +78,25 @@ class Template {
    * @param  {Object} attributes - object with attribute keys that will turn into html
    * @return {String}            - compiled template or asset tag
    */
-  include(file, attributes) {
-    const { data, directory, output, attributesToHTML } = this;
+  include(data, file, attributes) {
+    const { directory, output, attributesToHTML } = this;
 
+    const filePath = path.resolve(directory, file);
     const extension = file.substr(file.lastIndexOf('.') + 1, file.length);
     const fileName = file.substr(file.lastIndexOf('/') + 1, file.length);
 
     switch (extension) {
       case 'html':
-        return (new Template(fs.readFileSync(path.resolve(directory, file)).toString(), data, directory, output)).render();
+        return (new Template(fs.readFileSync(filePath).toString(), directory, output)).render(data);
       case 'css':
-        fs.createReadStream(path.resolve(directory, file)).pipe(fs.createWriteStream(path.resolve(output, fileName)));
+        fs.createReadStream(filePath).pipe(fs.createWriteStream(path.resolve(output, fileName)));
         return `&lt;link rel="stylesheet" href="./${fileName}" ${attributesToHTML(attributes)}>`;
       case 'png':
       case 'jpeg':
       case 'gif':
       case 'jpg':
       case 'svg':
-        fs.createReadStream(path.resolve(directory, file)).pipe(fs.createWriteStream(path.resolve(output, fileName)));
+        fs.createReadStream(filePath).pipe(fs.createWriteStream(path.resolve(output, fileName)));
         return `&lt;img src="./${fileName}" ${attributesToHTML(attributes)}>`;
     }
   }
@@ -105,18 +104,21 @@ class Template {
    * renders the template to string
    * @method render
    * @memberof Template
+   * @param  {Object}    data        - object that contains state for template
    * @return {string} - compiled template
    */
-  render() {
+  render(data) {
     const { template, include } = this;
-    this.data.include = include.bind(this);
 
-    var templ = template.replace(/[\r\t\n]/g, ' ');
-    var re = /{{[\s]*(.+?)[\s]*}}/g;
-    var reExp = /(^( )?(if|for|else|switch|case|break|{|}))(.*)?/g;
-    var code = 'var r=[];\n';
-    var cursor = 0;
-    var match;
+    data.include = include.bind(this, data);
+
+    const templ = template.replace(/[\r\t\n]/g, ' ');
+    const re = /{{[\s]*(.+?)[\s]*}}/g;
+    const reExp = /(^( )?(if|for|else|switch|case|break|{|}))(.*)?/g;
+
+    let code = 'var r=[];\n';
+    let cursor = 0;
+    let match;
 
     function add(line, js) {
       js ? (code += line.match(reExp) ? line + '\n' : 'r.push(' + line + ');\n') :
@@ -133,7 +135,7 @@ class Template {
       with(this) {
         ${code.replace(/[\r\t\n]/g, '')}
       }
-    `).bind(this.data)();
+    `).bind(data)();
   }
 }
 

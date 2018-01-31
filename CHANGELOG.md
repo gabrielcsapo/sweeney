@@ -1,3 +1,8 @@
+# 0.2.0 (01/30/2018)
+
+- config is named `.sweeney` no other variants
+- propagate errors in `.sweeney` to user, don't suppress them.
+
 # 0.1.1 (12/10/2017)
 
 - fixes config file from being named `.sweenyrc` to `.sweeneyrc`

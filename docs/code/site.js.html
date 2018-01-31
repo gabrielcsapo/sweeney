@@ -60,7 +60,7 @@ class Site {
    * @param  {Object} config    - config options for the site
    */
   constructor(directory, config) {
-    this.directory = directory;
+    this.directory = config.source ? path.resolve(process.cwd(), config.source) : directory;
     this.config = config;
     this.output = config.output ? path.resolve(directory, config.output) : path.resolve(directory, 'site');
   }
@@ -75,19 +75,26 @@ class Site {
    */
   async generate() {
     const self = this;
+    let posts = [];
     const { renderTemplate, directory, config, output } = this;
 
     // make sure the output directory exists
     await ensureDirectoryExists(output);
 
-    const posts = await Site.getTemplates(`${directory}/posts`);
-    const root = await Site.getTemplates(directory);
+    try {
+      posts = await Site.getTemplates(`${directory}/posts`, true, 'post');
+    } catch(ex) {
+      // noop
+    }
+    const root = await Site.getTemplates(directory, false, 'page');
 
     root.concat(posts).forEach(async function(post) {
       // TODO: expose related articles
       // TODO: expose next articles (can be configurable by default 3)
+      let options = Object.assign({ content: post.content, posts, page: {}, site: {} }, config);
+      options[post.type] = post;
 
-      await writeFile(`${output}/${post.file}.html`, await renderTemplate.bind(self)(directory, post.path, Object.assign({ content: post.content, posts, post, page: {}, site: {} }, config), output));
+      await writeFile(`${output}/${post.file}.html`, await renderTemplate.bind(self)(directory, post.path, options, output));
     });
   }
   /**
@@ -107,11 +114,11 @@ class Site {
     // recursively render necessary output when using templates
     if(options &amp;&amp; options.layout) {
       return await this.renderTemplate(basePath, path.resolve(basePath, `layouts/${options.layout}.html`), Object.assign(opts, {
-        content: (new Template(content, opts, sourceDirectory, outputDirectory)).render()
+        content: (new Template(content, sourceDirectory, outputDirectory)).render(opts)
       }), outputDirectory);
     }
 
-    return (new Template(content, opts, sourceDirectory, outputDirectory)).render();
+    return (new Template(content, sourceDirectory, outputDirectory)).render(opts);
   }
   /**
    * gets valid template files from the given directory
@@ -121,7 +128,7 @@ class Site {
    * @param  {Boolean} enforceOptions - enforce that options block is in the given files
    * @return {Object[]}               - an array of objects
    */
-  static async getTemplates(directory, enforceOptions) {
+  static async getTemplates(directory, enforceOptions, type) {
     const files = await readdir(directory);
 
     return await Promise.all(files
@@ -137,6 +144,7 @@ class Site {
         let { options, content } = parse(contents.toString('utf8'));
         if(!options &amp;&amp; enforceOptions) throw new Error('post should contain options block as the first entry in the file');
 
+        options.type = type;
         options.slug = `${file.substr(0, file.lastIndexOf('.'))}.html`;
         options.file = file.substr(0, file.lastIndexOf('.'));
         options.path = `${directory}/${file}`;
@@ -164,21 +172,33 @@ class Site {
    * @return {Object}  - config object
    */
   static async getConfig(directory) {
+    const defaults = {
+      source: directory,
+      output: `${directory}/site`
+    };
+    async function resolve(config) {
+      switch(typeof config) {
+        case 'object':
+          if(config instanceof Promise) {
+            return await config();
+          }
+          return config;
+        case 'function':
+          return config();
+      }
+    }
+
     directory = path.resolve(directory);
 
     try {
-      await stat(`${directory}/sweeney.js`);
-      return require(`${directory}/sweeney.js`);
+      await stat(`${directory}/.sweeney`);
+      return Object.assign(defaults, await resolve(require(`${directory}/.sweeney`)));
     } catch(ex) {
-      try {
-        await stat(`${directory}/.sweenyrc`);
-        return require(`${directory}/.sweenyrc`);
-      } catch(ex) {
-        return {
-          source: directory,
-          output: `${directory}/site`
-        };
+      // propogate message to the user, this is something with the config
+      if(ex.message !== 'no such file or directory') {
+        throw new Error(ex);
       }
+      return defaults;
     }
   }
 }

@@ -62,12 +62,12 @@ const readdir = promisify(fs.readdir);
 async function ensureDirectoryExists(directory) {
   let parts = directory.split('/').slice(1);
   let currentDirectory = '';
-  while(parts.length > 0) {
+  while (parts.length > 0) {
     currentDirectory += `/${parts.shift()}`;
 
     try {
       await stat(currentDirectory);
-    } catch(ex) {
+    } catch (ex) {
       await mkdir(currentDirectory);
     }
   }
@@ -82,7 +82,7 @@ async function ensureDirectoryExists(directory) {
 async function copyDirectory(source, destination) {
   const stats = await stat(source);
 
-  if (stats.isDirectory()) {
+  if (!stats.isFile() &amp;&amp; stats.isDirectory()) {
     await ensureDirectoryExists(destination);
 
     const files = await readdir(source);
@@ -122,24 +122,27 @@ function parse(content) {
  * @method ms
  * @memberof lib/util
  * @param  {Number} ms    - time in milleseconds
- * @param  {String=} type - the time wanted to display
  * @return {String}       - human readable string
  */
-function ms(ms, type) {
-  switch(type) {
-    case 'seconds':
-      return `${Math.floor(ms / 1000)}s`;
-    case 'minutes':
-      return `${Math.floor(ms / (1000 * 60))}m`;
-    case 'hours':
-      return `${Math.floor(ms / (1000 * 60 * 60))}h`;
-    case 'days':
-      return `${Math.floor(ms / (1000 * 60 * 60 * 24))}d`;
-    case 'weeks':
-      return `${Math.floor(ms / (1000 * 60 * 60 * 24 * 7))}w`;
-    default:
-      return `${ms}ms`;
+const s = 1000;
+const m = s * 60;
+const h = m * 60;
+const d = h * 24;
+
+function ms(ms) {
+  if (ms >= d) {
+    return `${Math.floor(ms / d)}d`;
   }
+  if (ms >= h) {
+    return `${Math.floor(ms / h)}h`;
+  }
+  if (ms >= m) {
+    return `${Math.floor(ms / m)}m`;
+  }
+  if (ms >= s) {
+    return `${Math.floor(ms / s)}s`;
+  }
+  return ms + 'ms';
 }
 
 module.exports = {

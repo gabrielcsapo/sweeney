@@ -225,14 +225,9 @@ if(program.watch) {
     }, async function(ev, file) {
       try {
         // refresh the require cache in the case config has updated
-        if(file.indexOf('sweeney.js') > -1) {
-          delete require.cache[require.resolve(path.resolve(directory, 'sweeney.js'))];
-          config = require(path.resolve(directory, 'sweeney.js'));
-        }
-
-        if(file.indexOf('.sweeneyrc') > -1) {
-          delete require.cache[require.resolve(path.resolve(directory, '.sweeneyrc'))];
-          config = require(path.resolve(directory, '.sweeneyrc'));
+        if(file.indexOf('.sweeney') > -1) {
+          delete require.cache[require.resolve(path.resolve(directory, '.sweeney'))];
+          config = require(path.resolve(directory, '.sweeney'));
         }
 
         // we don't want to rebuild the output directory because this is expected to change

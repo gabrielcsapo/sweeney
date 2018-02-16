@@ -6,32 +6,309 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
     <title>sweeney</title>
-    <link rel="stylesheet" href="./main.css">
+    <link rel="stylesheet" href="./assets/main.css">
+    <link rel="stylesheet" href="./assets/krayon.css">
   </head>
   <body>
-    <div id="container">
-      <div class="main">
+    <div class="nav">
+      <a class="button" href="https://github.com/gabrielcsapo/sweeney" target="_blank">Github</a>
+      <a class="button" href="./example/index.html">Example</a>
+      <a class="button" href="./code/index.html">Docs</a>
+    </div>
+    <div class="top-rect"></div>
+    <div class="page">
+      <div class="page-centered-content">
         <section>
           <div>
-            <img src="./logo.svg" alt="Sweeney Logo" style="max-height: 190px;">
+            <img src="./sweeney.svg" alt="Sweeney Logo" class="sweeney-logo">
           </div>
-          <h1>
+          <h1 class="sweeney">
             sweeney
           </h1>
-          <h3>💈 a blog aware, static site generator</h3>
-          <pre>
-            <code> npm install sweeney -g </code>
-            <code> sweeney new example </code>
-            <code> cd example </code>
-            <code> sweeney build </code>
-            <code> open site/index.html </code>
+          <h3 class="sweeney-description">A static site generator that cuts the way you want it to</h3>
+          <pre class="terminal terminal-install">
+            <code>$ npm install sweeney -g </code>
           </pre>
-          </br>
-          <a class="button" href="https://github.com/gabrielcsapo/sweeney" target="_blank">Github</a>
-          <a class="button" href="./example/index.html">Example</a>
-          <a class="button" href="./code/index.html">Docs</a>
+          <a class="button button-getting-started" href="#getting-started">Getting Started</a>
         </section>
       </div>
     </div>
+    <div class="page">
+      <div class="page-padded-center">
+        <a class="header" href="#getting-started" id="getting-started"> Getting Started <a>
+        <blockquote> Sweeney has very few built in assumptions. What it tends to do is let the user create the ideal environmnet to fit their use case. </blockquote>
+        <p>
+          It all starts with a <code>.sweeney</code> file.
+        </p>
+
+        <pre class="code-example">
+module.exports = async function() {
+  return {
+    render: (type, content) => {
+      return content;
+    },
+    source: './',
+    output: './site',
+    include: ['./file.css', './path/to/directory']
+  };
+};
+        </pre>
+
+        <p>
+          <b>render:</b> This is function that will be called before sweeney applies the template and can be used to convert markdown to html or any other templating engine you wish to use.
+          <br/>
+          <b>source:</b> This is the relative source directory from this file, by default it will be the current working directory.
+          <br/>
+          <b>output:</b> This is the relative output directroy from this file, by default it will be the directory site in the current working directory.
+          <br/>
+          <b>include:</b> This is an array of files or directories that will be copied over that contain static assets that you want to include in your project but do not wish to inject using the include template. <i>(This could include, but not limited to, fonts, images, documents, etc)</i>
+          <br/>
+          That's all! Anything else that is added to this config object will be injected at the top level of every component that is rendered.
+
+          <aside>
+            For example if you have a config that looks like:
+
+            <pre class="code-example">
+module.exports = async function() {
+  return {
+    ...
+    site: {
+      author: 'Me!'
+    }
+  };
+};
+            </pre>
+
+            You will be able to render that using the following template syntax.
+
+            <pre class="code-example">
+&lt;div&gt;
+  {{ site.author }}
+&lt;/div&gt;
+            </pre>
+
+          </aside>
+        </p>
+
+        <blockquote>
+          These options can be accessible via the CLI options.
+        </blockquote>
+
+        <div class="section-sub">
+          <a class="header" href="#cli-options" id="cli-options"> CLI Options <a>
+
+          <pre class="terminal">
+Usage: sweeney [options]
+
+Commands:
+
+  new                        Bootstrap a new project within the current working directory
+  build                      Build and output static files to site directory
+  serve                      Generates a http server to serve content from the site directory
+
+Options:
+
+  -h, --help                 Displays this screen
+  -v, --version              Display the current version of sweeney
+
+  -p, --port [port]          Overrides the randomized port for serve
+  -s, --source [path]        Overrides the default path which is the current working directory
+  -o, --output [path]        Overrides the output path
+  -w, --watch                Will watch the directory used to generate site and build when changes are made.
+                             If this is used in tandem with serve, it will inject javascript to reload the page when changes were made
+          </pre>
+          <blockquote>
+            The CLI has a number of interoperable commands, such as <code>sweeney serve --watch</code> Which will not only serve the content, but also watch and build for changes.
+          </blockquote>
+
+          <p>
+            When wanting to override an argument such as <code>port, source</code> or <code>output</code> simply add it to the end of the CLI invocation like <code>sweeney build --source ./this/is/source --output ./site</code>
+          </p>
+        </div>
+
+        <div class="section-sub">
+          <a class="header" href="#templates" id="templates"> Templates <a>
+
+          <blockquote>
+            It's important to note that files with an <code>.sy</code> extension will only be interpreted as a renderable by sweeney. This is for the primary purpose of making sure template files do not overwrite or interpret unecessary files.
+          </blockquote>
+
+          <p>
+            Instead of learning a template language, anything you can do with javascript you can do with sweeney. So what do I mean?
+          </p>
+
+          <p>
+            Looping through an array of objects is pretty simple:
+
+            <pre class="code-example">
+['earth', 'saturn', 'pluto'].forEach(() => {...});
+            </pre>
+
+            Using the same syntax you can create html that you can inject in your templates with the following markup:
+
+            <pre class="code-example">
+&lt;ul&gt;
+  {{
+    ['earth', 'saturn', 'pluto'].map((planet) => `&lt;li&gt;${planet}&lt;/li&gt;`).join('')
+  }}
+&lt;/ul&gt;
+            </pre>
+
+            Or if <code>planets</code> was defined in the <code>.sweeney</code> file or in the page options the template would look like:
+
+            <pre class="code-example">
+&lt;ul&gt;
+  {{
+    planets.map((planet) => `&lt;li&gt;${planet}&lt;/li&gt;`).join('')
+  }}
+&lt;/ul&gt;
+            </pre>
+            <blockquote>
+              The <code>join</code> is necessary because by default the to string method for a string will add <code>,</code> by default.
+            </blockquote>
+          </p>
+
+          <p>
+            Another powerful thing about sweeney is the idea of page options.
+
+            <pre class="code-example">
+---
+{
+  layout: 'posts',
+  collection: 'posts',
+  tags: ['hello', 'world'],
+  title: 'bool',
+  slug: 'testing-this-out'
+}
+---
+            </pre>
+
+            This is just <code>JSON</code>! What this example shows is that:
+
+            <ul>
+              <li> <b>layout:</b> use the default layout (this is a file that was named default with a type of layout) </li>
+              <li> <b>collection:</b> expose these options at the top level of any file that wants to look at all the posts files and their options at the top level. This let's other templates (the posts page for example) to look like
+                <pre class="code-example">
+&lt;ul&gt;
+  {{
+    posts.map((post) => `&lt;li&gt;${post.title}&lt;/li&gt;`).join('')
+  }}
+&lt;/ul&gt;
+                </pre>
+              </li>
+              <li> <b>tags/title/slug/etc:</b> Any other options that the user wants to expose to the page itself. This allows the template designer or the user to really be creative with what the content and design looks like.</li>
+            </ul>
+          </p>
+        </div>
+
+        <div class="section-sub">
+          <a class="header" href="#building-a-site" id="building-a-site"> Building a Site <a>
+
+          <p>
+            So we have been through the basics of what <code>sweeney</code> can do, how can we build a site? There are a few ways that one can build a site, simply build off the existing base template by running <code>sweeney new</code>, which will bootstrap a new site in the current working directory or build one from scratch.
+          </p>
+
+          <pre class="terminal">
+├── .sweeney
+├── index.sy
+          </pre>
+
+          <p>
+            This is the bare minium you need to make a site!
+          </p>
+
+          <p>
+            In your <code>.sweeney</code> file put the following config
+          </p>
+
+          <pre class="terminal">
+module.exports = {
+  source: './',
+  output: './',
+  site: {
+    title: 'Sweeney Example',
+    heading: 'A static site generator that cuts the way you want it to'
+  }
+};
+          </pre>
+
+          <blockquote>
+            Wait! We have put the source and output directory to be the same thing!? Yes, we can do this because <code>.sy</code> ;)
+          </blockquote>
+
+          <p>
+            In your <code>index.sy</code> file put the following code
+          </p>
+
+          <pre class="code-example">
+---
+{
+  "collection": "pages"
+}
+---
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;meta charset="utf-8"&gt;
+    &lt;title&gt;{{ site.title }}&lt;/title&gt;
+    &lt;style&gt;
+    * {
+      font-family: Baskerville;
+    }
+    html, body, .container {
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+      background-color: white;
+    }
+    .container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    h3 {
+      text-align: center;
+      width: 100%;
+      color: #3e3e3e;
+    }
+    &lt;/style&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;div class="container"&gt;
+      &lt;h3&gt;{{ site.heading }}&lt;/h3&gt;
+    &lt;/div&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+          </pre>
+
+          <p>
+            Now that all that is left is to run <code>sweeney build</code>.
+          </p>
+        </div>
+
+        <div class="footer">
+          Made with ☕️ by <a class="footer-link" href="http://www.gabrielcsapo.com">@gabrielcsapo</a>
+        </div>
+
+      </div>
+    </div>
+
+    <script src="./assets/krayon.min.js"></script>
+    <script>
+      (function() {
+        var krayon = require('krayon');
+        var examples = document.querySelectorAll('.code-example');
+
+        [].forEach.call(examples, function(example) {
+          example.innerHTML = krayon(example.innerHTML).trim();
+        });
+
+        var terminals = document.querySelectorAll('.terminal');
+
+        [].forEach.call(terminals, function(terminal) {
+          terminal.innerHTML = terminal.innerHTML.trim();
+        });
+      }());
+    </script>
   </body>
 </html>

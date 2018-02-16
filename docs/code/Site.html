@@ -24,7 +24,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <li class="nav-link nav-home-link"><a href="index.html">Home</a></li><li class="nav-heading">Classes</li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="Site.html">Site</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Site.html#.bootstrap">bootstrap</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Site.html#.getConfig">getConfig</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Site.html#.getTemplates">getTemplates</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Site.html#.renderTemplate">renderTemplate</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Site.html#~generate">generate</a></span></li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="Template.html">Template</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Template.html#.attributesToHTML">attributesToHTML</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Template.html#.include">include</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Template.html#.render">render</a></span></li><li class="nav-heading">Modules</li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-lib_util.html">lib/util</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-lib_util.html#~copyDirectory">copyDirectory</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-lib_util.html#~ensureDirectoryExists">ensureDirectoryExists</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-lib_util.html#~parse">parse</a></span></li>
+    <li class="nav-link nav-home-link"><a href="index.html">Home</a></li><li class="nav-heading">Classes</li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="Site.html">Site</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Site.html#.build">build</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Site.html#.categorize">categorize</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Site.html#.data">data</a></span></li><li class="nav-heading">Modules</li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-lib_util.html">lib/util</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-lib_util.html#~copyDirectory">copyDirectory</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-lib_util.html#~ensureDirectoryExists">ensureDirectoryExists</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-lib_util.html#~getConfig">getConfig</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-lib_util.html#~merge">merge</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-lib_util.html#~parse">parse</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-lib_util.html#~parseString">parseString</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-lib_util.html#~render">render</a></span></li>
 </nav>
 
 <div id="main">
@@ -56,7 +56,7 @@
 
     
 
-    <h4 class="name" id="Site"><span class="type-signature"></span>new Site<span class="signature">(directory, config)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="Site"><span class="type-signature"></span>new Site<span class="signature">(config)</span><span class="type-signature"></span></h4>
 
     
 
@@ -99,7 +99,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="site.js.html">site.js</a>, <a href="site.js.html#line15">line 15</a>
+        <a href="site.js.html">site.js</a>, <a href="site.js.html#line12">line 12</a>
     </li></ul></dd>
     
 
@@ -139,32 +139,6 @@
     </thead>
 
     <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>directory</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><code>String</code></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                <p>the root path to the site</p>
-                
-            </td>
-        </tr>
-
     
 
         <tr>
@@ -235,14 +209,14 @@
 
     
 
-    <h4 class="name" id=".bootstrap"><span class="type-signature">(static) </span>bootstrap<span class="signature">(destination)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id=".build"><span class="type-signature">(static) </span>build<span class="signature">()</span><span class="type-signature"> &rarr; {Promise}</span></h4>
 
     
 
 
 
 <div class="description">
-    <p>creates a new site</p>
+    <p>using the source directory, crawl all the necessary template files that will be ingested compiled</p>
 </div>
 
 
@@ -278,7 +252,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="site.js.html">site.js</a>, <a href="site.js.html#line116">line 116</a>
+        <a href="site.js.html">site.js</a>, <a href="site.js.html#line89">line 89</a>
     </li></ul></dd>
     
 
@@ -297,69 +271,38 @@
 
 
 
-    <h5>Parameters:</h5>
-    
 
-<table class="params">
-    <thead>
-    <tr>
+
+
+
+
+
+
+
+
+
+
+
+<div class="section-returns">
+<h5>Returns:</h5>
+
         
-        <th>Name</th>
+
+<dl class="param-type">
+    <dt>
+        Type:
+    </dt>
+    <dd>
         
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>destination</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><code>String</code></span>
+<span class="param-type"><code>Promise</code></span>
 
 
-            
-            </td>
+    </dd>
+</dl>
 
-            
-
-            
-
-            <td class="description last">
-                <p>the path to the destination directory</p>
-                
-            </td>
-        </tr>
 
     
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
+</div>
 
 
 
@@ -370,14 +313,14 @@
 
     
 
-    <h4 class="name" id=".getConfig"><span class="type-signature">(static) </span>getConfig<span class="signature">(directory)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    <h4 class="name" id=".categorize"><span class="type-signature">(static) </span>categorize<span class="signature">()</span><span class="type-signature"> &rarr; {Object}</span></h4>
 
     
 
 
 
 <div class="description">
-    <p>retrieves a config from the given directory</p>
+    <p>returns back pages and layouts as uncompiled templates</p>
 </div>
 
 
@@ -413,7 +356,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="site.js.html">site.js</a>, <a href="site.js.html#line126">line 126</a>
+        <a href="site.js.html">site.js</a>, <a href="site.js.html#line61">line 61</a>
     </li></ul></dd>
     
 
@@ -430,58 +373,6 @@
 
 
 
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>directory</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><code>String</code></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                <p>path of directory</p>
-                
-            </td>
-        </tr>
-
-    
-    </tbody>
-</table>
 
 
 
@@ -516,7 +407,7 @@
 
 <div class="param-desc">
     <ul>
-<li>config object</li>
+<li>returns an object with the keys <code>layout</code> and <code>pages</code> that are hashmaps</li>
 </ul>
 </div>
 
@@ -532,14 +423,15 @@
 
     
 
-    <h4 class="name" id=".getTemplates"><span class="type-signature">(static) </span>getTemplates<span class="signature">(directory, enforceOptions)</span><span class="type-signature"> &rarr; {Array.&lt;Object>}</span></h4>
+    <h4 class="name" id=".data"><span class="type-signature">(static) </span>data<span class="signature">()</span><span class="type-signature"> &rarr; {Object}</span></h4>
 
     
 
 
 
 <div class="description">
-    <p>gets valid template files from the given directory</p>
+    <p>dynamically retrieves the files content
+appropriately puts top level collections as root level keys</p>
 </div>
 
 
@@ -575,7 +467,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="site.js.html">site.js</a>, <a href="site.js.html#line82">line 82</a>
+        <a href="site.js.html">site.js</a>, <a href="site.js.html#line40">line 40</a>
     </li></ul></dd>
     
 
@@ -592,84 +484,6 @@
 
 
 
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>directory</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><code>String</code></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                <p>the path of the directory to search for template files</p>
-                
-            </td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>enforceOptions</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><code>Boolean</code></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                <p>enforce that options block is in the given files</p>
-                
-            </td>
-        </tr>
-
-    
-    </tbody>
-</table>
 
 
 
@@ -695,493 +509,15 @@
     </dt>
     <dd>
         
-<span class="param-type"><code>Array.&lt;Object></code></span>
+<span class="param-type"><code>Object</code></span>
 
 
     </dd>
 </dl>
 
 
-<div class="param-desc">
-    <ul>
-<li>an array of objects</li>
-</ul>
-</div>
-
     
 </div>
-
-
-
-</div>
-        
-            
-<div class="section-method">
-
-    
-
-    <h4 class="name" id=".renderTemplate"><span class="type-signature">(static) </span>renderTemplate<span class="signature">(basePath, filePath, opts, outputDirectory)</span><span class="type-signature"> &rarr; {String}</span></h4>
-
-    
-
-
-
-<div class="description">
-    <p>given a template file will render it and its layout</p>
-</div>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="site.js.html">site.js</a>, <a href="site.js.html#line59">line 59</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>basePath</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><code>String</code></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                <p>the project root path</p>
-                
-            </td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>filePath</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><code>String</code></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                <p>the absolute path to the file</p>
-                
-            </td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>opts</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><code>Object</code></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                <p>options to be passed to template function</p>
-                
-            </td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>outputDirectory</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><code>String</code></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                <p>the absolute path to the output directory</p>
-                
-            </td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="section-returns">
-<h5>Returns:</h5>
-
-        
-
-<dl class="param-type">
-    <dt>
-        Type:
-    </dt>
-    <dd>
-        
-<span class="param-type"><code>String</code></span>
-
-
-    </dd>
-</dl>
-
-
-<div class="param-desc">
-    <ul>
-<li>the rendered template</li>
-</ul>
-</div>
-
-    
-</div>
-
-
-
-</div>
-        
-            
-<div class="section-method">
-
-    
-
-    <h4 class="name" id="~generate"><span class="type-signature">(inner) </span>generate<span class="signature">(directory, config<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-<div class="description">
-    <p>generates a site given the directory and config object</p>
-</div>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="site.js.html">site.js</a>, <a href="site.js.html#line26">line 26</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-        <th>Attributes</th>
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>directory</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><code>String</code></span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">
-                <p>the directory where site files are contained</p>
-                
-            </td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>config</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><code>Object</code></span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">
-                <p>contains overrides to build scripts</p>
-                
-                    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>output</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><code>String</code></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                <p>output override for built files</p>
-                
-            </td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-                
-            </td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

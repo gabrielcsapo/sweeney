@@ -1,8 +1,10 @@
 ---
 {
-  "layout": "default"
+  "layout": "default",
+  "type": "layout"
 }
 ---
+
 <div class="post">
 
   <header class="post-header">

@@ -1,0 +1,17 @@
+---
+{
+  "collection": "pages",
+  "layout": "default",
+  "title": "Posts"
+}
+---
+
+<h3> Here are some posts </h3>
+
+<ul>
+  {{ posts.map((post) => {
+    const { name } = post;
+    const { title, tags } = post.options;
+    return `<li><a href="./${name}.html"> ${title} </a> [${tags.join(',')}]</li>`
+  }) }}
+</ul>

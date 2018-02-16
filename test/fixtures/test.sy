@@ -1,0 +1,29 @@
+---
+{
+"title": "Welcome to Sweeney!",
+"tags": ["sweeney", "example"]
+}
+---
+<!DOCTYPE html>
+<html>
+
+{{-- includes ../partials/head.html --}}
+
+<body style="display: flex;
+min-height: 100vh;
+flex-direction: column;
+margin: 0 auto;">
+
+{{-- includes ../partials/header.html --}}
+
+<div class="page-content">
+  <div class="wrapper">
+    {{ content }}
+  </div>
+</div>
+
+{{-- includes ../partials/footer.html --}}
+
+</body>
+
+</html>

@@ -1,0 +1,11 @@
+---
+{
+"title": "Welcome to Sweeney!",
+"tags": ["sweeney", "example"]
+}
+---
+<div>
+  <ul>
+    {{ options.tags.map((tag) => `<li>${tag}</li>`).join('') }}
+  </ul>
+</div>

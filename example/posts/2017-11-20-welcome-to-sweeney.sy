@@ -1,6 +1,9 @@
 ---
 {
+  "collection": "posts",
   "layout": "post",
+  "type": "markdown",
+  "slug": "welcome_to_sweeney",
   "title": "Welcome to Sweeney!",
   "date": "2017-11-20 12:58:29",
   "tags": ["sweeney", "example"]

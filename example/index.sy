@@ -1,0 +1,15 @@
+---
+{
+  "collection": "pages",
+  "layout": "default",
+  "title": "Home"
+}
+---
+
+<div>
+  <div>
+    <img src="./sweeney.svg" alt="Sweeney Logo" class="sweeney-logo">
+  </div>
+  <h1>{{ site.description }}</h1>
+  <h3>Checkout some of the <a href="posts.html">posts!</a></h3>
+</div>

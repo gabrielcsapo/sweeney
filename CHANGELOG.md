@@ -1,3 +1,13 @@
+# 1.0.0 (02/16/2018) [BREAKING CHANGE]
+
+- fixes watch to acknowledge the source attribute in the config file
+- adds a complete set of mime types
+- consolidates the source and output logic by renaming references that were generically named directory to either source or output
+- the only files that are parsed are files with the extension `.sy`
+- there are no predetermined collection types, those are defined in the options block in the file
+- exposes render function to config file that lets user override render method for certain files
+- revamps example website to be less complicated and more in touch with the rest of the site design
+
 # 0.2.0 (01/30/2018)
 
 - config is named `.sweeney` no other variants

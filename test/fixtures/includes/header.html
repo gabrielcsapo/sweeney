@@ -1,9 +1,0 @@
-<header class="site-header">
-  <a class="site-title" href="{{ site.main }}">{{ site.title }}</a>
-
-  <nav class="site-nav">
-    {{ site.pages.map((page) => {
-      return `<a class="page-link" href="${page.url}">${page.title}</a>`
-    }).join(' ') }}
-  </nav>
-</header>

@@ -1,0 +1,19 @@
+---
+{
+  "layout": "default",
+  "type": "layout"
+}
+---
+<div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">{{ options.title }}</h1>
+    <p class="post-meta">{{ options.date }} {{ site.author }}</p>
+    <small class="post-tags">{{ options.tags.join(', ') }}</small>
+  </header>
+
+  <article class="post-content">
+    {{ child }}
+  </article>
+
+</div>

@@ -1,0 +1,13 @@
+function test() {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({ hello: 'world' });
+    }, 1000);
+  });
+}
+
+module.exports = async function() {
+  return {
+    foo: await test()
+  }
+};

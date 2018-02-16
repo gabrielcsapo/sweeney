@@ -2,160 +2,113 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
-const { promisify } = require('util');
+const woof = require('woof');
 
-const stat = promisify(fs.stat);
+const { version } = require('../package.json');
 
 const Site = require('../lib/site');
 
-const { ms, copyDirectory } = require('../lib/util');
-
-const args = process.argv.slice(2);
+const mimes = require('../lib/mimes');
+const { ms, getConfig, copyDirectory } = require('../lib/util');
 
 process.on('unhandledRejection', (error) => {
-  console.error(`something extremely wrong happened \n ${error.stack}`); // eslint-disable-line
+  console.error(`Error: \n ${error.stack}`); // eslint-disable-line
 });
 
 // this is used when establishing when a build occured
 let build = Date.now();
-let program = {};
 
-args.forEach(async function(a, i){
-  switch(a) {
-  case '-v':
-  case '--version':
-      console.log(`v${require('../package.json').version}`); // eslint-disable-line
-      process.exit(0);
-    break;
-  case '-d':
-  case '--directory':
-    program.directory = path.resolve(args[i + 1]);
-    try {
-      const stats = await stat(program.directory);
-      stats.isDirectory(); // ensure that this is a directory
-    } catch(ex) {
-      console.error(`please provide a valid directory path. \n ${program.directory} is not a valid path.`); // eslint-disable-line
-      process.exit(1);
-    }
-    break;
-  case '-o':
-  case '--output':
-    program.output = path.resolve(args[i + 1]);
-  break;
-  case '-p':
-  case '--port':
-    program.port = args[i + 1];
-    break;
-  case 'help':
-  case '-h':
-  case '--help':
-    console.log(``+ // eslint-disable-line
-  `
-    Usage: sweeney [options]
+let program = woof(`
+  Usage: sweeney [options]
 
-    Commands:
+  Commands:
 
-      -n, --new, new [name]  bootstrap a new project with in the directory named
-      -b, --build, build     build and output static files to site directory
-      -s, --serve, serve     generates a http server to serve content from the site directory
-      -h, --help, help       displays this screen
-      -w, --watch, watch     will watch the directory used to generate site and build when changes are made. If this is used in tandem with serve, it will inject javascript to reload the page when changes were made.
+    new                        Bootstrap a new project within the current working directory
+    build                      Build and output static files to site directory
+    serve                      Generates a http server to serve content from the site directory
 
-    Options:
+  Options:
 
-      -p, --port [port]          overrides the randomized port for serve
-      -d, --directory [path]     overrides the default path which is the current working directory
-      -o, --output [path]        overrides the output path
-  `);
-    process.exit(0);
-    break;
-    case '-n':
-    case '--new':
-    case 'new':
-      program.new = true;
-      program.name = args[i + 1];
-      if(!program.name) {
-        console.error('please provide a valid name. \n sweeney new [name]'); // eslint-disable-line
-        process.exit(1);
+    -h, --help                 Displays this screen
+    -v, --version              Display the current version of sweeney
+
+    -p, --port [port]          Overrides the randomized port for serve
+    -s, --source [path]     Overrides the default path which is the current working directory
+    -o, --output [path]        Overrides the output path
+    -w, --watch                Will watch the directory used to generate site and build when changes are made.
+                               If this is used in tandem with serve, it will inject javascript to reload the page when changes were made.
+`, {
+  version,
+  commands: {
+    new: {},
+    build: {},
+    serve: {}
+  },
+  flags: {
+    source: {
+      type: 'string',
+      validate: function(value) {
+        const stats = fs.statSync(value);
+        return !stats.isDirectory() ? `please provide a valid directory path. \n ${value} is not a valid path.` : true;// ensure that this is a directory
       }
-    break;
-    case '-b':
-    case '--build':
-    case 'build':
-      program.build = true;
-    break;
-    case '-s':
-    case '--serve':
-    case 'serve':
-      program.serve = 'serve';
-    break;
-    case '-w':
-    case '--watch':
-    case 'watch':
-      program.watch = 'watch';
-    break;
+    },
+    output: {
+      type: 'string',
+      validate: function(value) {
+        const stats = fs.statSync(value);
+        return !stats.isDirectory() ? `please provide a valid directory path. \n ${value} is not a valid path.` : true;// ensure that this is a directory
+      }
+    },
+    port: {
+      type: 'integer',
+      default: 5000
+    },
+    watch: {
+      type: 'boolean',
+      default: false
+    }
   }
 });
 
-if(program.new) {
-  (async function() {
-    try {
-      const start = process.hrtime();
-      const directory = path.resolve(process.cwd(), program.name);
-
-      await Site.bootstrap(directory);
-      const end = process.hrtime(start);
-      console.log(`application bootstrapped in ${directory} [${ms(((end[0] * 1e9) + end[1]) / 1e6)}]`); // eslint-disable-line
-    } catch(ex) {
-      console.log(`uhoh something happened \n ${ex}`); // eslint-disable-line
-    }
-  }());
+if(program['help'] || program['version']) {
+  process.exit(0);
 }
 
-if(program.build) {
-  (async function() {
-    try {
+(async function() {
+  try {
+    if(program.new) {
       const start = process.hrtime();
-      const directory = program.directory || process.cwd();
-      let config = await Site.getConfig(directory);
+      const directory = process.cwd();
 
-      // overrides the output
-      program.output ? config.output = program.output : '';
+      await copyDirectory(path.resolve(__dirname, 'example'), directory);
+      const end = process.hrtime(start);
+      console.log(`application bootstrapped in ${directory} [${ms(((end[0] * 1e9) + end[1]) / 1e6)}]`); // eslint-disable-line
+    }
 
-      const site = new Site(directory, config);
-      await site.generate();
+    let config = await getConfig(program.source ? path.resolve(process.cwd(), program.source) : process.cwd());
+    const source = program.source ? path.resolve(process.cwd(), program.source) : config.source ? path.resolve(process.cwd(), config.source) : process.cwd();
+    const output = program.output ? path.resolve(process.cwd(), program.output) : config.output ? path.resolve(process.cwd(), config.output) : path.resolve(process.cwd(), 'site');
 
-      if(config.includes) {
-        config.includes.forEach((i) => {
-          let output = path.resolve(process.cwd(), config.output) + i.substr(i.lastIndexOf('/'), i.length);
-          copyDirectory(path.resolve(directory, i), output);
+    config.source = source;
+    config.output = output;
+
+    if(program.build) {
+      const start = process.hrtime();
+
+      const site = new Site(config);
+      await site.build();
+
+      if(config.include) {
+        config.include.forEach((i) => {
+          copyDirectory(path.resolve(source, i), output + i.substr(i.lastIndexOf('/'), i.length));
         });
       }
 
       const end = process.hrtime(start);
-      console.log(`site built at ${path.resolve(directory, config.output || 'site')} [${ms(((end[0] * 1e9) + end[1]) / 1e6)}]`); // eslint-disable-line
-    } catch(ex) {
-      console.log(`uhoh something happened \n ${ex}`); // eslint-disable-line
+      console.log(`site built at ${output} [${ms(((end[0] * 1e9) + end[1]) / 1e6)}]`); // eslint-disable-line
     }
-  }());
-}
 
-if(program.serve) {
-  (async function() {
-    try {
-      const extensions = {
-        'html': 'text/html',
-        'css': 'text/css',
-        'js': 'application/javascript',
-        'png': 'image/png',
-        'gif': 'image/gif',
-        'jpg': 'image/jpeg',
-        'jpeg': 'image/jpeg',
-        'svg': 'image/svg+xml'
-      };
-      const directory = path.resolve(process.cwd(), program.directory || './');
-      const config = await Site.getConfig(directory);
-
+    if(program.serve) {
       const server = http.createServer((req, res) => {
         if(req.url === '/__api/update') {
           res.statusCode = 200;
@@ -167,7 +120,7 @@ if(program.serve) {
 
         try {
           // removing the leading / from the file name
-          let contents = fs.readFileSync(path.resolve(directory, (config.output || 'site'), file.substr(1, file.length)));
+          let contents = fs.readFileSync(path.resolve(output, file.substr(1, file.length)));
           // inject javascript into the page to refresh it in the case that a new build occurs
           if(ext == 'html' && program.watch !== undefined) {
             contents = contents.toString('utf8').replace('</body>', `<script>
@@ -177,7 +130,12 @@ if(program.serve) {
                 d.innerHTML = '💈 you are currently developing this site, any changes will trigger a refresh';
                 d.style.padding = '10px';
                 d.style.textAlign = 'center';
-                d.style.borderBottom = '1px solid #e8e8e8';
+                d.style.border = '1px solid #e8e8e8';
+                d.style.background = '#fff';
+                d.style.margin = '10px';
+                d.style.position = 'absolute';
+                d.style.bottom = 0;
+                d.style.right = 0;
                 document.body.prepend(d);
 
                 setInterval(function() {
@@ -196,7 +154,7 @@ if(program.serve) {
             </script></body>`);
           }
           res.writeHead(200, {
-            'Content-Type': extensions[ext],
+            'Content-Type': mimes[ext],
             'Content-Length' : contents.length
           });
           res.end(contents);
@@ -207,39 +165,32 @@ if(program.serve) {
       }).listen(program.port, () => {
         console.log(`sweeney listening on http://localhost:${server.address().port}`); // eslint-disable-line
       });
-    } catch(ex) {
-      console.log(`uhoh something happened \n ${ex.toString()}`); // eslint-disable-line
     }
-  }());
-}
 
-if(program.watch) {
-  (async function() {
-    const directory = path.resolve(process.cwd(), program.directory || './');
-    let config = await Site.getConfig(directory);
-    const output = path.resolve(config.output || 'site');
+    if(program.watch) {
+      const site = new Site(config);
+      await site.build();
+      console.log(`watching ${source}`); // eslint-disable-line
 
-    console.log(`watching ${directory}`); // eslint-disable-line
-    fs.watch(directory, {
-      recursive: true
-    }, async function(ev, file) {
-      try {
+      fs.watch(source, {
+        recursive: true
+      }, async function(ev, file) {
         // refresh the require cache in the case config has updated
+        // TODO: just need to rebuild the site with the new config
         if(file.indexOf('.sweeney') > -1) {
-          delete require.cache[require.resolve(path.resolve(directory, '.sweeney'))];
-          config = require(path.resolve(directory, '.sweeney'));
+          delete require.cache[require.resolve(path.resolve(source, '.sweeney'))];
+          config = require(path.resolve(source, '.sweeney'));
         }
 
         // we don't want to rebuild the output directory because this is expected to change
         if(file.substring(0, file.lastIndexOf('/')) !== output.substring(output.lastIndexOf('/') + 1, output.length) && file.indexOf('.git') === -1) {
           console.log(`rebuilding because of ${ev} of ${file}`); // eslint-disable-line
-          const site = new Site(directory, config);
-          await site.generate();
+          await site.build();
           build = Date.now();
         }
-      } catch(ex) {
-        console.log(`uhoh something happened \n ${ex.toString()}`); // eslint-disable-line
-      }
-    });
-  }());
-}
+      });
+    }
+  } catch(ex) {
+    console.log(`Error: \n ${ex.stack}`); // eslint-disable-line
+  }
+}());

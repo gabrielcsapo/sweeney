@@ -3,7 +3,7 @@
   <h1>Sweeney</h1>
   <small>A static site generator that cuts the way you want it to.</small>
   <br/>
-  <a href="https://wwww.gabrielcsapo.com/sweeney">Getting Started</a>
+  <a href="https://www.gabrielcsapo.com/sweeney">Getting Started</a>
   <br/>
   <br/>
 </div>

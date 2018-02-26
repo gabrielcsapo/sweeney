@@ -3,10 +3,13 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const woof = require('woof');
+const { promisify } = require('util');
 
 const { version } = require('../package.json');
 
 const Site = require('../lib/site');
+
+const readFile = promisify(fs.readFile);
 
 const mimes = require('../lib/mimes');
 const { ms, getConfig, copyDirectory } = require('../lib/util');
@@ -109,7 +112,7 @@ if(program['help'] || program['version']) {
     }
 
     if(program.serve) {
-      const server = http.createServer((req, res) => {
+      const server = http.createServer(async (req, res) => {
         if(req.url === '/__api/update') {
           res.statusCode = 200;
           return res.end(build.toString());
@@ -120,11 +123,11 @@ if(program['help'] || program['version']) {
 
         try {
           // removing the leading / from the file name
-          let contents = fs.readFileSync(path.resolve(output, file.substr(1, file.length)));
+          let contents = (await readFile(path.resolve(output, file.substr(1, file.length)))).toString('utf8');
           // inject javascript into the page to refresh it in the case that a new build occurs
           if(ext == 'html' && program.watch !== undefined) {
-            contents = contents.toString('utf8').replace('</body>', `<script>
-              (function() {
+            contents = contents.replace('</body>', `<script type="text/javascript">
+              window.onload = function() {
                 var build = "${build}";
                 var d = document.createElement('div');
                 d.innerHTML = '💈 you are currently developing this site, any changes will trigger a refresh';
@@ -141,21 +144,21 @@ if(program['help'] || program['version']) {
                 setInterval(function() {
                   var xhttp = new XMLHttpRequest();
                   xhttp.onreadystatechange = function() {
-                      if (this.readyState == 4 && this.status == 200) {
-                        if(this.responseText !== build) {
-                          location.reload();
-                        }
+                    if (this.readyState == 4 && this.status == 200) {
+                      if (this.responseText !== build) {
+                        location.reload();
                       }
+                    }
                   };
                   xhttp.open("GET", "/__api/update", true);
                   xhttp.send();
-                }, 500)
-              }());
+                }, 500);
+              }
             </script></body>`);
           }
+
           res.writeHead(200, {
-            'Content-Type': mimes[ext],
-            'Content-Length' : contents.length
+            'Content-Type': mimes[ext]
           });
           res.end(contents);
         } catch(ex) {

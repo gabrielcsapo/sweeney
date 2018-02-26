@@ -1,3 +1,8 @@
+# 1.0.1 (02/26/2018)
+
+- ensures serve inputs watch script is injected into html file.
+- does not set content-length on buffered content
+
 # 1.0.0 (02/16/2018) [BREAKING CHANGE]
 
 - fixes watch to acknowledge the source attribute in the config file

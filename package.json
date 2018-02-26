@@ -1,6 +1,6 @@
 {
   "name": "sweeney",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "💈 A static site generator that cuts the way you want it to",
   "author": "Gabriel J. Csapo <gabecsapo@gmail.com>",
   "license": "Apache-2.0",

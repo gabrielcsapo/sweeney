@@ -63,16 +63,17 @@ test('util', (t) => {
       const parsed = await parse(path.resolve(__dirname, './fixtures/test.sy'));
 
       t.deepEqual({
-        path: '/Users/gabrielcsapo/Documents/sweeney/test/fixtures/test.sy',
+        path: path.resolve(__dirname, 'fixtures/test.sy'),
         options: {
           title: 'Welcome to Sweeney!',
           tags: ['sweeney', 'example']
         },
-        content: '<!DOCTYPE html>\n<html>\n\n{{-- includes /Users/gabrielcsapo/Documents/sweeney/test/partials/head.html --}}\n\n<body style="display: flex;\nmin-height: 100vh;\nflex-direction: column;\nmargin: 0 auto;">\n\n{{-- includes /Users/gabrielcsapo/Documents/sweeney/test/partials/header.html --}}\n\n<div class="page-content">\n  <div class="wrapper">\n    {{ content }}\n  </div>\n</div>\n\n{{-- includes /Users/gabrielcsapo/Documents/sweeney/test/partials/footer.html --}}\n\n</body>\n\n</html>\n',
+        content: `<!DOCTYPE html>\n<html>\n\n{{-- includes ${path.resolve(__dirname, 'partials/head.html')} --}}\n\n<body style="display: flex;\nmin-height: 100vh;\nflex-direction: column;\nmargin: 0 auto;">\n\n{{-- includes ${path.resolve(__dirname, 'partials/header.html')} --}}\n\n<div class="page-content">\n  <div class="wrapper">\n    {{ content }}\n  </div>\n</div>\n\n{{-- includes ${path.resolve(__dirname, 'partials/footer.html')} --}}\n\n</body>\n\n</html>\n`,
         name: 'test',
-        includes: ['/Users/gabrielcsapo/Documents/sweeney/test/partials/head.html',
-          '/Users/gabrielcsapo/Documents/sweeney/test/partials/header.html',
-          '/Users/gabrielcsapo/Documents/sweeney/test/partials/footer.html'
+        includes: [
+          path.resolve(__dirname, 'partials/head.html'),
+          path.resolve(__dirname, 'partials/header.html'),
+          path.resolve(__dirname, 'partials/footer.html')
         ],
         collection: 'page',
         type: 'html'

@@ -51,7 +51,11 @@ test('util', (t) => {
       const parsed = await parse(path.resolve(__dirname, './fixtures/render.sy'));
       const rendered = await render([], parsed, {});
 
-      t.equal(rendered, '<div>   <ul>     <li>sweeney</li><li>example</li>   </ul> </div> ');
+      t.deepEqual(Object.keys(rendered), ['path', 'rendered', 'time']);
+      t.equal(typeof rendered.time, 'number');
+      t.equal(rendered.rendered, '<div>   <ul>     <li>sweeney</li><li>example</li>   </ul> </div> ');
+      t.equal(rendered.path, path.resolve(__dirname, './fixtures/render.sy'));
+
       t.end();
     });
   });

@@ -5,7 +5,8 @@ async function getProjects() {
     setTimeout(() => {
       resolve([{
         name: 'sweeney',
-        description: '💈 a blog aware, static site generator'
+        description: '💈 a blog aware, static site generator',
+        url: 'http://www.gabrielcsapo.com/sweeney'
       }]);
     });
   });

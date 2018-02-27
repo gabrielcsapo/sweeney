@@ -12,7 +12,7 @@ const Site = require('../lib/site');
 const readFile = promisify(fs.readFile);
 
 const mimes = require('../lib/mimes');
-const { ms, getConfig, copyDirectory } = require('../lib/util');
+const { ms, getConfig, copyDirectory, renderSubDepends } = require('../lib/util');
 
 process.on('unhandledRejection', (error) => {
   console.error(`Error: \n ${error.stack}`); // eslint-disable-line
@@ -77,6 +77,15 @@ if(program['help'] || program['version']) {
   process.exit(0);
 }
 
+async function getConfigInDirectory() {
+  let config = await getConfig(program.source ? path.resolve(process.cwd(), program.source) : process.cwd());
+
+  config.source = program.source ? path.resolve(process.cwd(), program.source) : config.source ? path.resolve(process.cwd(), config.source) : process.cwd();
+  config.output = program.output ? path.resolve(process.cwd(), program.output) : config.output ? path.resolve(process.cwd(), config.output) : path.resolve(process.cwd(), 'site');
+
+  return config;
+}
+
 (async function() {
   try {
     if(program.new) {
@@ -85,15 +94,11 @@ if(program['help'] || program['version']) {
 
       await copyDirectory(path.resolve(__dirname, 'example'), directory);
       const end = process.hrtime(start);
+
       console.log(`application bootstrapped in ${directory} [${ms(((end[0] * 1e9) + end[1]) / 1e6)}]`); // eslint-disable-line
     }
 
-    let config = await getConfig(program.source ? path.resolve(process.cwd(), program.source) : process.cwd());
-    const source = program.source ? path.resolve(process.cwd(), program.source) : config.source ? path.resolve(process.cwd(), config.source) : process.cwd();
-    const output = program.output ? path.resolve(process.cwd(), program.output) : config.output ? path.resolve(process.cwd(), config.output) : path.resolve(process.cwd(), 'site');
-
-    config.source = source;
-    config.output = output;
+    let config = await getConfigInDirectory();
 
     if(program.build) {
       const start = process.hrtime();
@@ -103,12 +108,17 @@ if(program['help'] || program['version']) {
 
       if(config.include) {
         config.include.forEach((i) => {
-          copyDirectory(path.resolve(source, i), output + i.substr(i.lastIndexOf('/'), i.length));
+          copyDirectory(path.resolve(config.source, i), config.output + i.substr(i.lastIndexOf('/'), i.length));
         });
       }
 
       const end = process.hrtime(start);
-      console.log(`site built at ${output} [${ms(((end[0] * 1e9) + end[1]) / 1e6)}]`); // eslint-disable-line
+      // replace the source path with nothing so that we don't get a bunch of duplicate strings
+      process.stdout.write(`
+        site built at ${config.output} [${ms(((end[0] * 1e9) + end[1]) / 1e6)}]
+
+        ${site.rendered.map((top) => '\n' + renderSubDepends(top, 0).replace(new RegExp(config.source + '/', 'g'), '')).join('')}
+      `.trim() + '\n\n');
     }
 
     if(program.serve) {
@@ -123,7 +133,7 @@ if(program['help'] || program['version']) {
 
         try {
           // removing the leading / from the file name
-          let contents = (await readFile(path.resolve(output, file.substr(1, file.length)))).toString('utf8');
+          let contents = (await readFile(path.resolve(config.output, file.substr(1, file.length)))).toString('utf8');
           // inject javascript into the page to refresh it in the case that a new build occurs
           if(ext == 'html' && program.watch !== undefined) {
             contents = contents.replace('</body>', `<script type="text/javascript">
@@ -166,34 +176,43 @@ if(program['help'] || program['version']) {
           res.end();
         }
       }).listen(program.port, () => {
-        console.log(`sweeney listening on http://localhost:${server.address().port}`); // eslint-disable-line
+        process.stdout.write(`sweeney listening on http://localhost:${server.address().port}\n`);
       });
     }
 
     if(program.watch) {
-      const site = new Site(config);
-      await site.build();
-      console.log(`watching ${source}`); // eslint-disable-line
+      let start = process.hrtime();
 
-      fs.watch(source, {
+      let site = new Site(config);
+      await site.build();
+      let end = process.hrtime(start);
+      process.stdout.write(`site built at ${config.output} [${ms(((end[0] * 1e9) + end[1]) / 1e6)}] and watching ${config.source}\n`);
+
+      fs.watch(config.source, {
         recursive: true
       }, async function(ev, file) {
         // refresh the require cache in the case config has updated
-        // TODO: just need to rebuild the site with the new config
         if(file.indexOf('.sweeney') > -1) {
-          delete require.cache[require.resolve(path.resolve(source, '.sweeney'))];
-          config = require(path.resolve(source, '.sweeney'));
+          delete require.cache[require.resolve(path.resolve(config.source, '.sweeney'))];
+          config = await getConfigInDirectory();
+          site = new Site(config);
+          await site.build();
         }
 
         // we don't want to rebuild the output directory because this is expected to change
-        if(file.substring(0, file.lastIndexOf('/')) !== output.substring(output.lastIndexOf('/') + 1, output.length) && file.indexOf('.git') === -1) {
-          console.log(`rebuilding because of ${ev} of ${file}`); // eslint-disable-line
+        if(file.substring(0, file.lastIndexOf('/')) !== config.output.substring(config.output.lastIndexOf('/') + 1, config.output.length) && file.indexOf('.git') === -1) {
+          start = process.hrtime();
           await site.build();
           build = Date.now();
+          end = process.hrtime(start);
+          process.stdout.write(`
+            site rebuilt in [${ms(((end[0] * 1e9) + end[1]) / 1e6)}] because of ${ev} of ${file}
+            ${site.rendered.map((top) => '\n' + renderSubDepends(top, 0).replace(new RegExp(config.source + '/', 'g'), '')).join('')}
+          `.trim() + '\n\n');
         }
       });
     }
   } catch(ex) {
-    console.log(`Error: \n ${ex.stack}`); // eslint-disable-line
+    process.stdout.write(`Error: \n ${ex.stack} \n`);
   }
 }());

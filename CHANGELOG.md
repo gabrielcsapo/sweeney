@@ -1,3 +1,8 @@
+# 1.0.2 (02/26/2018)
+
+- makes sure if you change `.sweeney` during watch, it will rebuild and uncache the old config.
+- outputs build metrics per file and its dependencies 
+
 # 1.0.1 (02/26/2018)
 
 - ensures serve inputs watch script is injected into html file.

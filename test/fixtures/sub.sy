@@ -1,0 +1,10 @@
+---
+{
+  "type": "page"
+}
+---
+
+<div>
+  {{-- includes ./depend.sy --}}
+  {{-- includes ./render.sy --}}
+</div>

@@ -13,7 +13,7 @@
     <div class="nav">
       <a class="button" href="https://github.com/gabrielcsapo/sweeney" target="_blank">Github</a>
       <a class="button" href="./example/index.html">Example</a>
-      <a class="button" href="./code/index.html">Docs</a>
+      <a class="button" href="./code/index.html">Documentation</a>
     </div>
     <div class="top-rect"></div>
     <div class="page">
@@ -22,7 +22,7 @@
           <div>
             <img src="./sweeney.svg" alt="Sweeney Logo" class="sweeney-logo">
           </div>
-          <h1 class="sweeney">
+          <h1 class="sweeney sweeney-title">
             sweeney
           </h1>
           <h3 class="sweeney-description">A static site generator that cuts the way you want it to</h3>
@@ -30,6 +30,8 @@
             <code>$ npm install sweeney -g </code>
           </pre>
           <a class="button button-getting-started" href="#getting-started">Getting Started</a>
+          <br/>
+          <a class="sweeney-version" href="https://github.com/gabrielcsapo/sweeney/releases/tag/1.1.0"><small>Current release: v1.1.0</small></a>
         </section>
       </div>
     </div>
@@ -202,6 +204,116 @@ Options:
         </div>
 
         <div class="section-sub">
+          <a class="header" href="#plugins" id="plugins"> Plugins <a>
+
+          <p>
+            While <span class="sweeney">sweeney</span> might not look like much out of the box, that is purposeful. In order to maintain speed and extensibility, the core static site generator comes with very few prestablished patterns.
+
+            Writing a plugin for sweeney is extremely easy and can be done in the <code>.sweeney</code> file or imported through node.
+          </p>
+
+          <blockquote> This is an example of what it would look like to import a plugin via node. in your <code>.sweeney</code> file. </blockquote>
+
+          <small> Please note that <code>sweeney-optomize-image</code> is not a real node module.
+          <pre class="code-example">
+module.exports = async function() {
+  return {
+    ...
+    plugins: {
+      optimizeImage: require('sweeney-optomize-image')
+    },
+    site: {
+      author: 'Me!'
+    }
+  };
+}
+          </pre>
+        </div>
+
+        <div class="section-sub">
+          <a class="header" href="#writing-a-plugin" id="writing-a-plugin"> Writing a plugin <a>
+
+          <p>
+            Writing a plugin has two components, the <code>parse</code> method. This function usually makes sure everything is properly formatted and if anything that needs to be exposed to the render method. The second part being the <code>render</code> method. The render method is where the content is altered or the desired effect takes place.
+          </p>
+
+          <blockquote> I am going to walk you through what a simple include plugin might do when faced with a css entity. <i>To see a fully working include function, go checkout the defaultPlugins in the source</i></blockquote>
+
+          <pre class="code-example">
+const path = require('path');
+
+module.exports.include = {
+  parse: async function(filePath, content) {
+    // we are looking for the pattern {{-- includes ... }} in the template
+    // this could be any pattern, it does not need to look like the handlebars syntax it could be [[== includes ... ==]]
+    // that is the extensibility of the plugin architecture
+
+    const reg = /{{-- includes (.+?) --}}/g;
+
+    if(content.match(reg)) {
+      let found = [];
+      let block;
+      while ((block = reg.exec(content)) != null) {
+        let oldArgument = block[1];
+        let newArgument = path.resolve(path.dirname(filePath), oldArgument);
+
+        content = content.replace(`{{-- includes ${oldArgument} --}}`, `{{-- includes ${newArgument} --}}`);
+        found.push(newArgument);
+      }
+      // we pass comtent and found to parseString method (which calls this) to update the content string
+      // we changed and to add the items to the global object to be used for later.
+      return {
+        content,
+        found
+      };
+    }
+    return false;
+  },
+  render: async function(plugins, filePath, content, templates, data, found) {
+    const start = process.hrtime();
+    let ext = found.substring(found.lastIndexOf('.') + 1, found.length);
+    let name = found.substring(found.lastIndexOf('/') + 1, found.length - 3);
+    let depends = [];
+
+    if(ext === 'css') {
+      let _content = await readFile(found, 'utf8');
+
+      content = content.replace(`{{-- includes ${found} --}}`, `<style>${_content}</style>`);
+
+      // ensure this content gets added to the dependency tree
+      // the depends object is a little more involved then this internally
+      // but for the sake of the plugin, sweeney only expects filePath and time to be passed back
+      depends.push({
+        filePath: found,
+        time: process.hrtime(start)[1]/1000000
+      });
+    }
+
+    return {
+      // the depends object is something that is maintained internally to sweeney
+      // but templates can add other items to this to show the
+      // user what has effected the render time and when it happened.
+      depends,
+      content
+    };
+  }
+}
+          </pre>
+
+          <p>
+            That is a simple include plugin!
+
+            <blockquote>Plugins don't necessarily have to alter the content. In the future plugins will be able to happen during certain life cycle events.</blockquote>
+          </p>
+
+          <p>
+            The data passed back in found, will be set to the <code>config['
+            name of plugin']</code> for example, if you have a plugin named <code>include</code> then <code>config['include']</code> would have the information for the found data during <code>parse</code>. This can be used in templates or even in other plugins to be able to chain plugins together. Using other data gathered through <code>parse</code> and altered during <code>render</code>.
+          </p>
+
+        </div>
+
+        <div class="section-sub">
           <a class="header" href="#building-a-site" id="building-a-site"> Building a Site <a>
 
           <p>
@@ -233,7 +345,7 @@ module.exports = {
           </pre>
 
           <blockquote>
-            Wait! We have put the source and output directory to be the same thing!? Yes, we can do this because <code>.sy</code> ;)
+            Wait! We have put the source and output directory to be the same thing!? Yes, we can do this because of the <code>.sy</code> extension 🎉.
           </blockquote>
 
           <p>

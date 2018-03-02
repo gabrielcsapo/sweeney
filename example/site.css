@@ -18,6 +18,7 @@ html, body {
   right: 0;
   z-index: -1;
   background-color: #3e3e3e;
+  background: linear-gradient(to bottom right, #3e3e3e, #1a1a1a);
   overflow: hidden;
   overflow-x: hidden;
   overflow-y: hidden;

@@ -1,7 +1,18 @@
+# 1.1.0 (02/27/2018)
+
+- fixes new command (the path to the example/new project directory was wrong)
+- fixes and tests `copyDirectory` to ensure files and sub directories are copied before completed
+- removes dead code getConfig
+- removes getRenderedDepends method as it does nothing.
+  - fixes and tests renderSubDepends to work with the default behavior of template linking
+- removes includes business logic to new `plugins architecture`!
+- parseString is now async, because plugins can parse async
+- `ms` now truncates milliseconds to the 4th decimal place if displaying milliseconds only
+
 # 1.0.2 (02/26/2018)
 
 - makes sure if you change `.sweeney` during watch, it will rebuild and uncache the old config.
-- outputs build metrics per file and its dependencies 
+- outputs build metrics per file and its dependencies
 
 # 1.0.1 (02/26/2018)
 

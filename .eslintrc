@@ -8,7 +8,8 @@
       "quotes": ["error", "single"],
       "semi": ["error", "always"],
       "no-inner-declarations": 0,
-      "no-cond-assign": 0
+      "no-cond-assign": 0,
+      "prefer-const": ["error"]
     },
     "parserOptions": {
       "ecmaVersion": 2017,

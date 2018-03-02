@@ -1,0 +1,13 @@
+---
+{
+  "type": "layout"
+}
+---
+
+<a class="nav-title sweeney" href="{{ site.main }}">{{ site.title }}</a>
+
+<div class="nav">
+  {{ pages ? pages.map((page) => {
+    return `<a class="button ${(options.title || site.title).toLowerCase() === (page.options && page.options.title || page.name).toLowerCase() ? 'active' : ''}" href="${page.name}.html">${page.options && page.options.title || page.name}</a>`
+  }).join(' ') : '' }}
+</div>

@@ -1,6 +1,6 @@
 {
   "name": "sweeney",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "💈 A static site generator that cuts the way you want it to",
   "author": "Gabriel J. Csapo <gabecsapo@gmail.com>",
   "license": "Apache-2.0",
@@ -15,10 +15,19 @@
   "homepage": "https://www.gabrielcsapo.com/sweeney",
   "scripts": {
     "lint": "eslint .",
-    "test": "tape test/util.js",
-    "coverage": "tap test --coverage --coverage-report=lcov",
+    "pretest": "rm -rf test/tmp",
+    "test": "tape test/*.js | tap-diff",
+    "coverage": "npm run pretest && tap test --coverage --coverage-report=lcov",
     "generate-docs": "jsdoc -c .jsdoc.json",
     "generate-example": "bin/sweeney.js build --output ./docs/example --source ./example"
+  },
+  "nyc": {
+    "exclude": [
+      "docs/**",
+      "example/**",
+      "coverage/**"
+    ],
+    "all": true
   },
   "bin": {
     "sweeney": "./bin/sweeney.js"
@@ -29,6 +38,7 @@
     "markdown-it": "^8.4.0",
     "minami": "^1.2.3",
     "tap": "^11.0.0",
+    "tap-diff": "^0.1.1",
     "tape": "^4.8.0"
   },
   "dependencies": {

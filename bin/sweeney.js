@@ -21,7 +21,7 @@ process.on('unhandledRejection', (error) => {
 // this is used when establishing when a build occured
 let build = Date.now();
 
-let program = woof(`
+const program = woof(`
   Usage: sweeney [options]
 
   Commands:
@@ -78,7 +78,7 @@ if(program['help'] || program['version']) {
 }
 
 async function getConfigInDirectory() {
-  let config = await getConfig(program.source ? path.resolve(process.cwd(), program.source) : process.cwd());
+  const config = await getConfig(program.source ? path.resolve(process.cwd(), program.source) : process.cwd());
 
   config.source = program.source ? path.resolve(process.cwd(), program.source) : config.source ? path.resolve(process.cwd(), config.source) : process.cwd();
   config.output = program.output ? path.resolve(process.cwd(), program.output) : config.output ? path.resolve(process.cwd(), config.output) : path.resolve(process.cwd(), 'site');
@@ -92,7 +92,7 @@ async function getConfigInDirectory() {
       const start = process.hrtime();
       const directory = process.cwd();
 
-      await copyDirectory(path.resolve(__dirname, 'example'), directory);
+      await copyDirectory(path.resolve(__dirname, '..', 'example'), directory);
       const end = process.hrtime(start);
 
       console.log(`application bootstrapped in ${directory} [${ms(((end[0] * 1e9) + end[1]) / 1e6)}]`); // eslint-disable-line
@@ -113,10 +113,10 @@ async function getConfigInDirectory() {
       }
 
       const end = process.hrtime(start);
+
       // replace the source path with nothing so that we don't get a bunch of duplicate strings
       process.stdout.write(`
         site built at ${config.output} [${ms(((end[0] * 1e9) + end[1]) / 1e6)}]
-
         ${site.rendered.map((top) => '\n' + renderSubDepends(top, 0).replace(new RegExp(config.source + '/', 'g'), '')).join('')}
       `.trim() + '\n\n');
     }
@@ -129,7 +129,7 @@ async function getConfigInDirectory() {
         }
         let file = req.url || '/index.html';
         if(file === '/') file = '/index.html';
-        let ext = file.substr(file.lastIndexOf('.') + 1, file.length);
+        const ext = file.substr(file.lastIndexOf('.') + 1, file.length);
 
         try {
           // removing the leading / from the file name

@@ -24,7 +24,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <li class="nav-link nav-home-link"><a href="index.html">Home</a></li><li class="nav-heading">Classes</li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="Site.html">Site</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Site.html#.build">build</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Site.html#.categorize">categorize</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Site.html#.data">data</a></span></li><li class="nav-heading">Modules</li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-lib_util.html">lib/util</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-lib_util.html#~copyDirectory">copyDirectory</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-lib_util.html#~ensureDirectoryExists">ensureDirectoryExists</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-lib_util.html#~getConfig">getConfig</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-lib_util.html#~merge">merge</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-lib_util.html#~parse">parse</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-lib_util.html#~parseString">parseString</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-lib_util.html#~render">render</a></span></li>
+    <li class="nav-link nav-home-link"><a href="index.html">Home</a></li><li class="nav-heading">Classes</li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="Site.html">Site</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Site.html#.build">build</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Site.html#.categorize">categorize</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Site.html#.data">data</a></span></li><li class="nav-heading">Modules</li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-lib_util.html">lib/util</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-lib_util.html#~copyDirectory">copyDirectory</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-lib_util.html#~ensureDirectoryExists">ensureDirectoryExists</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-lib_util.html#~getConfig">getConfig</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-lib_util.html#~getTotalTimeOfDepends">getTotalTimeOfDepends</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-lib_util.html#~merge">merge</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-lib_util.html#~parse">parse</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-lib_util.html#~parseString">parseString</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-lib_util.html#~render">render</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-lib_util.html#~renderSubDepends">renderSubDepends</a></span></li>
 </nav>
 
 <div id="main">
@@ -59,7 +59,7 @@ const readdir = promisify(fs.readdir);
  * @param  {String} directory - the given path
  */
 async function ensureDirectoryExists(directory) {
-  let parts = directory.split('/').slice(1);
+  const parts = directory.split('/').slice(1);
   let currentDirectory = '';
   while (parts.length > 0) {
     currentDirectory += `/${parts.shift()}`;
@@ -86,9 +86,10 @@ async function copyDirectory(source, destination) {
 
     const files = await readdir(source);
 
-    files.forEach(async function(childItemName) {
+    for(var i = 0; i &lt; files.length; i++) {
+      const childItemName = files[i];
       await copyDirectory(path.join(source, childItemName), path.join(destination, childItemName));
-    });
+    }
   } else {
     await writeFile(destination, await readFile(source));
   }
@@ -101,21 +102,17 @@ async function copyDirectory(source, destination) {
  * @return {Object}  - config object
  */
 async function getConfig(directory) {
-  async function resolve(config) {
+  try {
+    await stat(`${directory}/.sweeney`);
+
+    const config = require(`${directory}/.sweeney`);
+
     switch (typeof config) {
       case 'object':
-        if (config instanceof Promise) {
-          return await config();
-        }
         return config;
       case 'function':
         return config();
     }
-  }
-
-  try {
-    await stat(`${directory}/.sweeney`);
-    return await resolve(require(`${directory}/.sweeney`));
   } catch (ex) {
     // propogate message to the user, this is something with the config
     if (ex.message.indexOf('no such file or directory') === -1) {
@@ -132,35 +129,28 @@ async function getConfig(directory) {
  * @param  {String}    content  - Template string
  * @return {Object}    - parsed template output
  */
-function parseString(filePath, content) {
-  let config = {};
+async function parseString(plugins, filePath, content) {
+  const config = {};
 
   // this is the name of the file without the extension, used for internal use or during the output process
   config.name = filePath.substring(filePath.lastIndexOf('/') + 1, filePath.length - 3);
 
-  // let's check for any special sweeney tags
-  // the first capture group is the block and the second is the argument
-  if (/{{-- (.+?) (.+?) --}}/g.test(content)) {
-    let reg = new RegExp(/{{-- (.+?) (.+?) --}}/g);
-    let block;
-    while ((block = reg.exec(content)) != null) {
-      let type = block[1];
-      let argument = block[2];
-      if (!config[type]) config[type] = [];
-      // let's normalize the path if given a relative one
-      if (type === 'includes') {
-        let oldArgument = JSON.parse(JSON.stringify(argument));
-        argument = path.resolve(path.dirname(filePath), argument);
-        // let's update the content of the file to reflect the need for the specific file
-        content = content.replace(`{{-- ${type} ${oldArgument} --}}`, `{{-- ${type} ${argument} --}}`);
-      }
-      config[type].push(argument);
+  // let's run through the plugins
+  const pluginNames = Object.keys(plugins);
+  for(const name of pluginNames) {
+    const plugin = plugins[name];
+
+    const output = await plugin.parse(filePath, content);
+    if(output) {
+      if(output.content !== content) content = output.content; // update the content with the augmented one
+      if(output.found.length > 0) config[name] = output.found;
     }
   }
+
   if (/^---\n/.test(content)) {
     var end = content.search(/\n---\n/);
     if (end != -1) {
-      let parsed = JSON.parse(content.slice(4, end + 1));
+      const parsed = JSON.parse(content.slice(4, end + 1));
       // this is the top level attribute in the render function that will allow users to do things like
       // {{ posts.forEach((post) => {...}) }} _In this case posts will be an array_
       config.collection = parsed.collection || 'page';
@@ -172,6 +162,7 @@ function parseString(filePath, content) {
       if (parsed.layout) config.layout = parsed.layout;
     }
   }
+
   return config;
 }
 
@@ -181,16 +172,17 @@ function parseString(filePath, content) {
  * @param  {String} content - file contents that could potentially contain options
  * @return {Object} - with the attributes options and content
  */
-async function parse(filePath) {
-  let content = await readFile(filePath);
+async function parse(plugins, filePath) {
+  const content = await readFile(filePath, 'utf8');
 
-  let config = {
-    path: filePath,
+  const config = {
+    filePath,
     options: {},
     content: content
   };
 
-  return Object.assign(config, parseString(filePath, content.toString('utf8')));
+
+  return Object.assign(config, await parseString(plugins, filePath, content));
 }
 
 /**
@@ -218,7 +210,7 @@ function ms(ms) {
   if (ms >= s) {
     return `${Math.floor(ms / s)}s`;
   }
-  return ms + 'ms';
+  return ms.toFixed(4).replace(/\.0000$/, '') + 'ms';
 }
 
 /**
@@ -229,42 +221,35 @@ function ms(ms) {
  * @param  {Object} additional      - additional data that needs to be merged into template data
  * @return {String}                 - rendered template to string
  */
-async function render(templates, template, additional = {}) {
-  let { includes = [], content = '', path } = template;
+async function render(plugins, templates, template, additional = {}) {
+  const start = process.hrtime();
+
+  const { filePath } = template;
+  let { content = '' } = template;
+
   // combine the data from the template and whatever is passed in
-  let data = merge(additional, template);
-  if (!content) return;
+  const data = merge(additional, template);
+  if(!content) return;
 
   try {
-    if (includes.length > 0) {
-      // loop through the includes and figure out what we need to do
-      for (var i = 0; i &lt; includes.length; i++) {
-        let include = includes[i];
-        let ext = include.substring(include.lastIndexOf('.') + 1, include.length);
-        let name = include.substring(include.lastIndexOf('/') + 1, include.length - 3);
-        let _content = await readFile(include);
+    // let's run through rendering any plugin data that was parsed out
+    const pluginNames = Object.keys(plugins);
+    const tempDepends = [];
+    for(var p = 0; p &lt; pluginNames.length; p++) {
+      const name = pluginNames[p];
+      const plugin = plugins[name];
 
-        switch (ext) {
-          case 'sy':
-            content = content.replace(`{{-- includes ${include} --}}`, await render(templates, templates[name], data));
-            break;
-          case 'css':
-            content = content.replace(`{{-- includes ${include} --}}`, `&lt;style>${_content}&lt;/style>`);
-            break;
-          case 'png':
-          case 'jpeg':
-          case 'gif':
-          case 'jpg':
-          case 'svg':
-            // TODO: we probably want to copy the asset somewhere close by and reference it in the output correctly
-            content = content.replace(`{{-- includes ${include} --}}`, '');
-            break;
-          default:
-            // we are just going to read the file's content and inject it into the template
-            content = content.replace(`{{-- includes ${include} --}}`, _content.toString('utf8'));
-            break;
+      if(data[name] &amp;&amp; data[name].length > 0) {
+        for(const found of data[name]) {
+          const output = await plugin.render(plugins, filePath, content, templates, data, found);
+
+          if(output.content) content = output.content;
+          if(output.depends) tempDepends.push(output.depends);
         }
       }
+    }
+    if(tempDepends.length > 0) {
+      data.depends = [].concat.apply([], tempDepends);
     }
 
     const templ = content.replace(/[\r\t\n]/g, ' ');
@@ -287,29 +272,43 @@ async function render(templates, template, additional = {}) {
     add(templ.substr(cursor, templ.length - cursor));
     code += 'return r.join("");';
 
-    let rendered = new Function(`
+    const rendered = new Function(`
       with(this) {
         ${code.replace(/[\r\t\n]/g, '')}
       }
     `).bind(data)();
 
     // if this template has a layout file we must render this then the layout file
-    let layout = template.layout &amp;&amp; templates[template.layout];
+    const layout = template.layout &amp;&amp; templates[template.layout];
+    // why are we doing this, well we pass around data a fairbit and we want to snapshot the state of the depends field at this point
+    const depends = data.depends ? JSON.parse(JSON.stringify(data.depends)) : [];
 
     if (layout) {
       // we have to delete the old layout
       delete data['layout'];
 
-      return await render(templates, layout, Object.assign(data, {
-        child: rendered
-      }));
-    } else {
-      return rendered;
-    }
+      const output = await render(plugins, templates, layout, Object.assign({
+        child: rendered,
+        depends: [] // pass in an empty data to stop from creating duplicate data
+      }, data));
 
+      return {
+        filePath,
+        depends: output,
+        rendered: output.rendered,
+        time: process.hrtime(start)[1]/1000000
+      };
+    } else {
+      return {
+        filePath,
+        rendered,
+        depends, // this is if any plugin has added dependency information to the template
+        time: process.hrtime(start)[1]/1000000
+      };
+    }
   } catch (ex) {
     throw new Error(JSON.stringify({
-      error: `Error building template ${path}`,
+      error: `Error building template ${filePath}`,
       content: content,
       stack: ex.stack
     }));
@@ -343,6 +342,50 @@ function merge(target, source) {
   return target;
 }
 
+/**
+ * recursively goes through render item to find the total time of rendered dependencies
+ * @param  {Object} item - rendered item output by render method
+ * @return {Number} - time in milleseconds
+ */
+function getTotalTimeOfDepends(item) {
+  let time = 0;
+
+  if(Array.isArray(item)) {
+    time += item.map((i) => getTotalTimeOfDepends(i)).reduce((a, b) => a + b, 0);
+  }
+
+  if(!Array.isArray(item) &amp;&amp; typeof item === 'object') {
+    time += item.time;
+  }
+
+  // recursively find the depends values
+  if(item.depends) time += getTotalTimeOfDepends(item.depends);
+
+  return time;
+}
+
+/**
+ * renders a dependency tree from the given render item
+ * @param  {Object} item  - render item
+ * @param  {Number} level - the level of the tree that the element is a part of (by default is 0)
+ * @return {String} - ascii representation of render tree for the given item
+ */
+function renderSubDepends(item, level=0) {
+  let output = '';
+
+  if(Array.isArray(item)) {
+    output += item.map((i) => renderSubDepends(i, level)).join('');
+  }
+
+  if(!Array.isArray(item) &amp;&amp; typeof item === 'object') {
+    output += '\n' + `${level === 0 ? '' : ' '.repeat(level * 2) + '-'} ${item.filePath} [${ms(item.time)}]`;
+  }
+
+  if(item.depends) output += renderSubDepends(item.depends, level + 1);
+
+  return output ;
+}
+
 module.exports = {
   merge,
   parse,
@@ -351,7 +394,9 @@ module.exports = {
   ms,
   getConfig,
   ensureDirectoryExists,
-  copyDirectory
+  copyDirectory,
+  renderSubDepends,
+  getTotalTimeOfDepends
 };
 </code></pre>
         </article>

@@ -180,7 +180,7 @@ test('@site', (t) => {
           }
         },
         pages: {
-          '/Users/gcsapo/Documents/sweeney/test/fixtures/depend.sy': {
+          [`${path.resolve(__dirname)}/fixtures/depend.sy`]: {
             'filePath': `${path.resolve(__dirname, 'fixtures')}/depend.sy`,
             'options': {
               'type': 'page'

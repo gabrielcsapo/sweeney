@@ -1,3 +1,14 @@
+# 1.2.0 (04/10/2018)
+
+- plugins don't have to have a parse or render method to be interpreted.
+- makes sure content, type and collection is always returned even if no options block is parsed from string
+- crawl will inject `outputPath` into all pages that are rendered
+- inMemory is now an option on Site that doesn't build the site to disk but rather to memory
+- `onBuild` can now be set on Site that will trigger after a build has been finished
+- reduces the complexity of bin operations. All Site based functionality is done at the top level instead of each function having its own instance, it is shared.
+- when the server fails it will throw the stack output not the error.toString() `this is not really helpful`
+- moves linting to standard
+
 # 1.1.0 (02/27/2018)
 
 - fixes new command (the path to the example/new project directory was wrong)

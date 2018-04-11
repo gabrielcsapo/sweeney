@@ -12,7 +12,7 @@
       <meta name="viewport" content="width=device-width initial-scale=1" />
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-      <title>{{ options.title || site.title }}</title>
+      <title>{{-- editable options.title || site.title string --}}</title>
       {{-- includes ../site.css --}}
       <meta name="description" content="{{ site.description }}">
   </head>

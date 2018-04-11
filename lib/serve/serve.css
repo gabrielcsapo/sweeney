@@ -1,0 +1,77 @@
+.editable-body {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+.editable-body__sidebar {
+  width: 10%;
+  z-index: 1000;
+}
+.editable-body__page {
+  width: 90%;
+  position: relative;
+  margin: 0 auto;
+}
+
+.editable-container {
+  padding: 10px;
+  text-align: center;
+  border-right: 3px solid #e8e8e8;
+  background: #fff;
+  height: 100%;
+}
+.editable-container__save {
+  border: 1px solid #dedede;
+  background: #ffff;
+  width: 100%;
+  padding: 5px 0;
+  margin: 3px 0;
+}
+.editable-container__item {
+  text-align: left;
+}
+.editable-container__item-header {
+  margin: 0;
+}
+.editable-container__item-list {
+  list-style:none;
+  margin: 0;
+  padding: 0;
+}
+.editable-container__item-list-item {
+  margin: 10px;
+}
+.editable-container__item-list-item__label {
+  display: block;
+}
+.editable-container__item-list-item__input {
+  width: 90%;
+  height: 25px;
+  padding: 3px;
+  margin: 3px 0;
+}
+
+.navigation-controls {
+  margin-top: 20px;
+  width: 100%;
+
+  display: flex;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-wrap: wrap;
+  flex-wrap: wrap;
+}
+.navigation-controls__item:first-child {
+  border-left: 1px solid #dedede;
+}
+.navigation-controls__item {
+  display: inline-block;
+  flex-grow: 1;
+  width: 25px;
+  height: 25px;
+  border-top: 1px solid #dedede;
+  border-bottom: 1px solid #dedede;
+  border-right: 1px solid #dedede;
+  padding: 10px;
+}

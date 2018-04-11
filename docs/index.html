@@ -204,6 +204,33 @@ Options:
         </div>
 
         <div class="section-sub">
+          <a class="header" href="#realtime-editing" id="realtime-editing"> Realtime Editing <a>
+
+          <pre class="code-example">
+&lt;div&gt;
+  {{ editable options.title string}}
+&lt;/div&gt;
+          </pre>
+          <blockquote>
+            Editing is only contained to string and number for right now <i>more options will be coming soon</i>
+          </blockquote>
+
+          <p>
+            When starting the site up in <code>serve</code> mode using the <code>--watch</code> option you will see a sidebar in the corner of your screen such like:
+
+            <img src="./assets/realtime-editing.png" width="100%" height:"100%" style="margin: 10px;border:1px solid #dedede"/>
+          </p>
+
+          <p>
+            Pressing save will issue a rebuild with the file that will trigger the page to refresh with the new content.
+          </p>
+
+          <blockquote>
+            If the value is a top level key, meaning it was retrieved from a key that wasn't from options (i.e a key that doesn't originate from that file) it will write the key value to <code>.sweeney</code> file.
+          </blockquote>
+        </div>
+
+        <div class="section-sub">
           <a class="header" href="#plugins" id="plugins"> Plugins <a>
 
           <p>

@@ -24,7 +24,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <li class="nav-link nav-home-link"><a href="index.html">Home</a></li><li class="nav-heading">Classes</li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="Site.html">Site</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Site.html#.build">build</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Site.html#.categorize">categorize</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Site.html#.data">data</a></span></li><li class="nav-heading">Modules</li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-lib_util.html">lib/util</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-lib_util.html#~copyDirectory">copyDirectory</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-lib_util.html#~ensureDirectoryExists">ensureDirectoryExists</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-lib_util.html#~getConfig">getConfig</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-lib_util.html#~getTotalTimeOfDepends">getTotalTimeOfDepends</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-lib_util.html#~merge">merge</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-lib_util.html#~parse">parse</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-lib_util.html#~parseString">parseString</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-lib_util.html#~render">render</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-lib_util.html#~renderSubDepends">renderSubDepends</a></span></li>
+    <li class="nav-link nav-home-link"><a href="index.html">Home</a></li><li class="nav-heading">Classes</li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="Site.html">Site</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Site.html#.build">build</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Site.html#.categorize">categorize</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Site.html#.data">data</a></span></li><li class="nav-heading">Modules</li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-lib_util_.html">lib/util</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-lib_util.html#~copyDirectory">copyDirectory</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-lib_util.html#~ensureDirectoryExists">ensureDirectoryExists</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-lib_util_.html#~getConfig">getConfig</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-lib_util_.html#~getTotalTimeOfDepends">getTotalTimeOfDepends</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-lib_util_.html#~merge">merge</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-lib_util_.html#~parse">parse</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-lib_util_.html#~parseString">parseString</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-lib_util_.html#~render">render</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-lib_util_.html#~renderSubDepends">renderSubDepends</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-lib_util_.html#~templateToString">templateToString</a></span></li>
 </nav>
 
 <div id="main">
@@ -43,31 +43,31 @@
  * @module lib/util
  */
 
-const fs = require('fs');
-const path = require('path');
-const { promisify } = require('util');
+const fs = require('fs')
+const path = require('path')
+const { promisify } = require('util')
 
-const stat = promisify(fs.stat);
-const mkdir = promisify(fs.mkdir);
-const writeFile = promisify(fs.writeFile);
-const readFile = promisify(fs.readFile);
-const readdir = promisify(fs.readdir);
+const stat = promisify(fs.stat)
+const mkdir = promisify(fs.mkdir)
+const writeFile = promisify(fs.writeFile)
+const readFile = promisify(fs.readFile)
+const readdir = promisify(fs.readdir)
 
 /**
  * ensures the given path exists, if not recursively generates folder leading to the paths
  * @method ensureDirectoryExists
  * @param  {String} directory - the given path
  */
-async function ensureDirectoryExists(directory) {
-  const parts = directory.split('/').slice(1);
-  let currentDirectory = '';
+async function ensureDirectoryExists (directory) {
+  const parts = directory.split('/').slice(1)
+  let currentDirectory = ''
   while (parts.length > 0) {
-    currentDirectory += `/${parts.shift()}`;
+    currentDirectory += `/${parts.shift()}`
 
     try {
-      await stat(currentDirectory);
+      await stat(currentDirectory)
     } catch (ex) {
-      await mkdir(currentDirectory);
+      await mkdir(currentDirectory)
     }
   }
 }
@@ -78,20 +78,20 @@ async function ensureDirectoryExists(directory) {
  * @param  {String} source      - path to source
  * @param  {String} destination - path to destination
  */
-async function copyDirectory(source, destination) {
-  const stats = await stat(source);
+async function copyDirectory (source, destination) {
+  const stats = await stat(source)
 
   if (!stats.isFile() &amp;&amp; stats.isDirectory()) {
-    await ensureDirectoryExists(destination);
+    await ensureDirectoryExists(destination)
 
-    const files = await readdir(source);
+    const files = await readdir(source)
 
-    for(var i = 0; i &lt; files.length; i++) {
-      const childItemName = files[i];
-      await copyDirectory(path.join(source, childItemName), path.join(destination, childItemName));
+    for (var i = 0; i &lt; files.length; i++) {
+      const childItemName = files[i]
+      await copyDirectory(path.join(source, childItemName), path.join(destination, childItemName))
     }
   } else {
-    await writeFile(destination, await readFile(source));
+    await writeFile(destination, await readFile(source))
   }
 }
 
@@ -101,25 +101,45 @@ async function copyDirectory(source, destination) {
  * @param  {String}  directory - path of directory
  * @return {Object}  - config object
  */
-async function getConfig(directory) {
+async function getConfig (directory) {
   try {
-    await stat(`${directory}/.sweeney`);
+    await stat(`${directory}/.sweeney`)
 
-    const config = require(`${directory}/.sweeney`);
+    const config = require(`${directory}/.sweeney`)
 
     switch (typeof config) {
       case 'object':
-        return config;
+        return config
       case 'function':
-        return config();
+        return config()
     }
   } catch (ex) {
     // propogate message to the user, this is something with the config
     if (ex.message.indexOf('no such file or directory') === -1) {
-      throw ex;
+      throw ex
     }
-    return {};
+    return {}
   }
+}
+
+function escapeRegexValues (string) {
+  return string.replace(/[-[\]{}()*+!&lt;=:?.\\^$|#\s,]/g, '\\$&amp;')
+}
+
+/**
+ * turns a template object back into a string
+ * @param  {Object} templateObject - template object obtained by using parseString or parse
+ * @return {String} - stringified template
+ */
+function templateToString (templateObject) {
+  const { options, content, type } = templateObject
+
+  return `
+---
+${JSON.stringify(Object.assign(options, { type }), null, 4)}
+---
+${content}
+`.trim()
 }
 
 /**
@@ -129,41 +149,46 @@ async function getConfig(directory) {
  * @param  {String}    content  - Template string
  * @return {Object}    - parsed template output
  */
-async function parseString(plugins, filePath, content) {
-  const config = {};
+async function parseString (plugins, filePath, content) {
+  const config = {}
 
   // this is the name of the file without the extension, used for internal use or during the output process
-  config.name = filePath.substring(filePath.lastIndexOf('/') + 1, filePath.length - 3);
+  config.name = filePath.substring(filePath.lastIndexOf('/') + 1, filePath.length - 3)
 
   // let's run through the plugins
-  const pluginNames = Object.keys(plugins);
-  for(const name of pluginNames) {
-    const plugin = plugins[name];
+  const pluginNames = Object.keys(plugins)
+  for (const name of pluginNames) {
+    const plugin = plugins[name]
+    if (!plugin.parse) continue
 
-    const output = await plugin.parse(filePath, content);
-    if(output) {
-      if(output.content !== content) content = output.content; // update the content with the augmented one
-      if(output.found.length > 0) config[name] = output.found;
+    const output = await plugin.parse(filePath, content)
+    if (output) {
+      if (output.content !== content) content = output.content // update the content with the augmented one
+      if (output.found.length > 0) config[name] = output.found
     }
   }
 
   if (/^---\n/.test(content)) {
-    var end = content.search(/\n---\n/);
-    if (end != -1) {
-      const parsed = JSON.parse(content.slice(4, end + 1));
+    var end = content.search(/\n---\n/)
+    if (end !== -1) {
+      const parsed = JSON.parse(content.slice(4, end + 1))
       // this is the top level attribute in the render function that will allow users to do things like
       // {{ posts.forEach((post) => {...}) }} _In this case posts will be an array_
-      config.collection = parsed.collection || 'page';
+      config.collection = parsed.collection || 'page'
       // type is the value that the parser will look at to decide what to do with that file
-      config.type = parsed.type || 'html';
-      config.options = parsed;
-      config.content = content.slice(end + 5);
+      config.type = parsed.type || 'html'
+      config.options = parsed
+      config.content = content.slice(end + 5)
 
-      if (parsed.layout) config.layout = parsed.layout;
+      if (parsed.layout) config.layout = parsed.layout
     }
+  } else {
+    config.content = content
+    config.type = 'html'
+    config.collection = 'page'
   }
 
-  return config;
+  return config
 }
 
 /**
@@ -172,17 +197,16 @@ async function parseString(plugins, filePath, content) {
  * @param  {String} content - file contents that could potentially contain options
  * @return {Object} - with the attributes options and content
  */
-async function parse(plugins, filePath) {
-  const content = await readFile(filePath, 'utf8');
+async function parse (plugins, filePath) {
+  const content = await readFile(filePath, 'utf8')
 
   const config = {
     filePath,
     options: {},
     content: content
-  };
+  }
 
-
-  return Object.assign(config, await parseString(plugins, filePath, content));
+  return Object.assign(config, await parseString(plugins, filePath, content))
 }
 
 /**
@@ -192,25 +216,25 @@ async function parse(plugins, filePath) {
  * @param  {Number} ms    - time in milleseconds
  * @return {String}       - human readable string
  */
-const s = 1000;
-const m = s * 60;
-const h = m * 60;
-const d = h * 24;
+const s = 1000
+const m = s * 60
+const h = m * 60
+const d = h * 24
 
-function ms(ms) {
+function ms (ms) {
   if (ms >= d) {
-    return `${Math.floor(ms / d)}d`;
+    return `${Math.floor(ms / d)}d`
   }
   if (ms >= h) {
-    return `${Math.floor(ms / h)}h`;
+    return `${Math.floor(ms / h)}h`
   }
   if (ms >= m) {
-    return `${Math.floor(ms / m)}m`;
+    return `${Math.floor(ms / m)}m`
   }
   if (ms >= s) {
-    return `${Math.floor(ms / s)}s`;
+    return `${Math.floor(ms / s)}s`
   }
-  return ms.toFixed(4).replace(/\.0000$/, '') + 'ms';
+  return ms.toFixed(4).replace(/\.0000$/, '') + 'ms'
 }
 
 /**
@@ -221,97 +245,111 @@ function ms(ms) {
  * @param  {Object} additional      - additional data that needs to be merged into template data
  * @return {String}                 - rendered template to string
  */
-async function render(plugins, templates, template, additional = {}) {
-  const start = process.hrtime();
+async function render (plugins, templates, template, additional = {}) {
+  const start = process.hrtime()
 
-  const { filePath } = template;
-  let { content = '' } = template;
+  const { filePath } = template
+  let { content = '' } = template
 
   // combine the data from the template and whatever is passed in
-  const data = merge(additional, template);
-  if(!content) return;
+  const data = merge(additional, template)
+  if (!content) return
 
   try {
     // let's run through rendering any plugin data that was parsed out
-    const pluginNames = Object.keys(plugins);
-    const tempDepends = [];
-    for(var p = 0; p &lt; pluginNames.length; p++) {
-      const name = pluginNames[p];
-      const plugin = plugins[name];
+    const pluginNames = Object.keys(plugins)
+    const tempDepends = []
+    for (var p = 0; p &lt; pluginNames.length; p++) {
+      const name = pluginNames[p]
+      const plugin = plugins[name]
 
-      if(data[name] &amp;&amp; data[name].length > 0) {
-        for(const found of data[name]) {
-          const output = await plugin.render(plugins, filePath, content, templates, data, found);
+      if (data[name] &amp;&amp; data[name].length > 0) {
+        for (const found of data[name]) {
+          if (!plugin.render) continue
 
-          if(output.content) content = output.content;
-          if(output.depends) tempDepends.push(output.depends);
+          const output = await plugin.render(plugins, filePath, content, templates, data, found)
+
+          if (output.content) content = output.content
+          if (output.depends) tempDepends.push(output.depends)
         }
       }
     }
-    if(tempDepends.length > 0) {
-      data.depends = [].concat.apply([], tempDepends);
+    if (tempDepends.length > 0) {
+      data.depends = [].concat.apply([], tempDepends)
     }
 
-    const templ = content.replace(/[\r\t\n]/g, ' ');
-    const re = /{{[\s]*(.+?)[\s]*}}/g;
-    const reExp = /(^( )?(if|for|else|switch|case|break|{|}))(.*)?/g;
+    const templ = content.replace(/[\r\t\n]/g, ' ')
+    const re = /{{[\s]*(.+?)[\s]*}}/g
 
-    let code = 'var r=[];\n';
-    let cursor = 0;
-    let match;
+    let code = 'var r=[];\n'
+    let cursor = 0
+    let match = ''
 
-    function add(line, js) {
-      js ? (code += line.match(reExp) ? line + '\n' : 'r.push(' + line + ');\n') :
-        (code += line != '' ? 'r.push("' + line.replace(/"/g, '\\"') + '");\n' : '');
-      return add;
+    function add (line, js) { // eslint-disable-line no-inner-declarations
+      const reExp = /(^( )?(if|for|else|switch|case|break|{|}))(.*)?/g
+
+      js ? (code += line.match(reExp) ? line + '\n' : 'r.push(' + line + ');\n')
+        : (code += line !== '' ? 'r.push("' + line.replace(/"/g, '\\"') + '");\n' : '')
+      return add
     }
-    while (match = re.exec(templ)) {
-      add(templ.slice(cursor, match.index))(match[1], true);
-      cursor = match.index + match[0].length;
-    }
-    add(templ.substr(cursor, templ.length - cursor));
-    code += 'return r.join("");';
 
+    while ((match = re.exec(templ)) !== null) {
+      add(templ.slice(cursor, match.index))(match[1], true)
+      cursor = match.index + match[0].length
+    }
+    add(templ.substr(cursor, templ.length - cursor))
+    code += 'return r.join("");'
+
+    /* eslint-disable no-new-func */
     const rendered = new Function(`
       with(this) {
         ${code.replace(/[\r\t\n]/g, '')}
       }
-    `).bind(data)();
+    `).bind(data)()
+    /* eslint-enable no-new-func */
 
     // if this template has a layout file we must render this then the layout file
-    const layout = template.layout &amp;&amp; templates[template.layout];
+    const layout = template.layout &amp;&amp; templates[template.layout]
     // why are we doing this, well we pass around data a fairbit and we want to snapshot the state of the depends field at this point
-    const depends = data.depends ? JSON.parse(JSON.stringify(data.depends)) : [];
+    const depends = data.depends ? JSON.parse(JSON.stringify(data.depends)) : []
+
+    const safeData = {}
+    Object.keys(data).forEach((k) => {
+      if (k !== 'depends' &amp;&amp; k !== 'layout') {
+        safeData[k] = data[k]
+      }
+    })
 
     if (layout) {
       // we have to delete the old layout
-      delete data['layout'];
+      delete data['layout']
 
       const output = await render(plugins, templates, layout, Object.assign({
-        child: rendered,
-        depends: [] // pass in an empty data to stop from creating duplicate data
-      }, data));
+        child: rendered
+      }, safeData))
 
       return {
+        data: JSON.parse(JSON.stringify(safeData)),
         filePath,
         depends: output,
         rendered: output.rendered,
-        time: process.hrtime(start)[1]/1000000
-      };
+        time: process.hrtime(start)[1] / 1000000
+      }
     } else {
       return {
+        data: JSON.parse(JSON.stringify(safeData)),
         filePath,
         rendered,
         depends, // this is if any plugin has added dependency information to the template
-        time: process.hrtime(start)[1]/1000000
-      };
+        time: process.hrtime(start)[1] / 1000000
+      }
     }
   } catch (ex) {
     throw new Error(JSON.stringify({
       error: `Error building template ${filePath}`,
       content: content,
       stack: ex.stack
-    }));
+    }))
   }
 }
 
@@ -322,24 +360,24 @@ async function render(plugins, templates, template, additional = {}) {
  * @param  {Object|Array} source - an array or object, must be the same type as the other value being passed
  * @return {Object|Array}        - an array or object, depending on what has been passed in
  */
-function merge(target, source) {
-  if (typeof target == 'object' &amp;&amp; typeof source == 'object') {
+function merge (target, source) {
+  if (typeof target === 'object' &amp;&amp; typeof source === 'object') {
     for (const key in source) {
       if (source[key] === null &amp;&amp; (target[key] === undefined || target[key] === null)) {
-        target[key] = null;
+        target[key] = null
       } else if (source[key] instanceof Array) {
-        if (!target[key]) target[key] = [];
-        //concatenate arrays
-        target[key] = target[key].concat(source[key]);
-      } else if (typeof source[key] == 'object') {
-        if (!target[key]) target[key] = {};
-        merge(target[key], source[key]);
+        if (!target[key]) target[key] = []
+        // concatenate arrays
+        target[key] = target[key].concat(source[key])
+      } else if (typeof source[key] === 'object') {
+        if (!target[key]) target[key] = {}
+        merge(target[key], source[key])
       } else {
-        target[key] = source[key];
+        target[key] = source[key]
       }
     }
   }
-  return target;
+  return target
 }
 
 /**
@@ -347,21 +385,21 @@ function merge(target, source) {
  * @param  {Object} item - rendered item output by render method
  * @return {Number} - time in milleseconds
  */
-function getTotalTimeOfDepends(item) {
-  let time = 0;
+function getTotalTimeOfDepends (item) {
+  let time = 0
 
-  if(Array.isArray(item)) {
-    time += item.map((i) => getTotalTimeOfDepends(i)).reduce((a, b) => a + b, 0);
+  if (Array.isArray(item)) {
+    time += item.map((i) => getTotalTimeOfDepends(i)).reduce((a, b) => a + b, 0)
   }
 
-  if(!Array.isArray(item) &amp;&amp; typeof item === 'object') {
-    time += item.time;
+  if (!Array.isArray(item) &amp;&amp; typeof item === 'object') {
+    time += item.time
   }
 
   // recursively find the depends values
-  if(item.depends) time += getTotalTimeOfDepends(item.depends);
+  if (item.depends) time += getTotalTimeOfDepends(item.depends)
 
-  return time;
+  return time
 }
 
 /**
@@ -370,20 +408,20 @@ function getTotalTimeOfDepends(item) {
  * @param  {Number} level - the level of the tree that the element is a part of (by default is 0)
  * @return {String} - ascii representation of render tree for the given item
  */
-function renderSubDepends(item, level=0) {
-  let output = '';
+function renderSubDepends (item, level = 0) {
+  let output = ''
 
-  if(Array.isArray(item)) {
-    output += item.map((i) => renderSubDepends(i, level)).join('');
+  if (Array.isArray(item)) {
+    output += item.map((i) => renderSubDepends(i, level)).join('')
   }
 
-  if(!Array.isArray(item) &amp;&amp; typeof item === 'object') {
-    output += '\n' + `${level === 0 ? '' : ' '.repeat(level * 2) + '-'} ${item.filePath} [${ms(item.time)}]`;
+  if (!Array.isArray(item) &amp;&amp; typeof item === 'object') {
+    output += '\n' + `${level === 0 ? '' : ' '.repeat(level * 2) + '-'} ${item.filePath} [${ms(item.time)}]`
   }
 
-  if(item.depends) output += renderSubDepends(item.depends, level + 1);
+  if (item.depends) output += renderSubDepends(item.depends, level + 1)
 
-  return output ;
+  return output
 }
 
 module.exports = {
@@ -393,11 +431,13 @@ module.exports = {
   render,
   ms,
   getConfig,
+  escapeRegexValues,
   ensureDirectoryExists,
   copyDirectory,
   renderSubDepends,
+  templateToString,
   getTotalTimeOfDepends
-};
+}
 </code></pre>
         </article>
     </section>

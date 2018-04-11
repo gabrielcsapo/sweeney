@@ -1,3 +1,8 @@
+# 1.2.1 (04/11/2018)
+
+- removes `makeSearchable` migrates to `get` instead
+- moves `get`, `set` and `getEditable` to utils with tests
+
 # 1.2.0 (04/10/2018)
 
 - plugins don't have to have a parse or render method to be interpreted.

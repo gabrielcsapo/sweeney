@@ -1,6 +1,6 @@
 {
   "name": "sweeney",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "💈 A static site generator that cuts the way you want it to",
   "author": "Gabriel J. Csapo <gabecsapo@gmail.com>",
   "license": "Apache-2.0",
@@ -15,6 +15,7 @@
   "homepage": "https://www.gabrielcsapo.com/sweeney",
   "scripts": {
     "lint": "standard --verbose | snazzy",
+    "lint:fix": "standard --fix --verbose | snazzy",
     "pretest": "rm -rf test/tmp",
     "test": "tape test/*.js | tap-diff",
     "coverage": "npm run pretest && tap test --coverage --coverage-report=lcov",

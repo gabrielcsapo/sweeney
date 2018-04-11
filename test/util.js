@@ -4,11 +4,29 @@ const fs = require('fs')
 const path = require('path')
 const test = require('tape')
 
-const { promisify } = require('util')
+const {
+  promisify
+} = require('util')
 const stat = promisify(fs.stat)
 const readdir = promisify(fs.readdir)
 
-const { ms, merge, render, escapeRegexValues, parse, parseString, getConfig, ensureDirectoryExists, renderSubDepends, getTotalTimeOfDepends, templateToString, copyDirectory } = require('../lib/util')
+const {
+  ms,
+  merge,
+  set,
+  get,
+  getEditable,
+  render,
+  escapeRegexValues,
+  parse,
+  parseString,
+  getConfig,
+  ensureDirectoryExists,
+  renderSubDepends,
+  getTotalTimeOfDepends,
+  templateToString,
+  copyDirectory
+} = require('../lib/util')
 
 const defaultPlugins = require('../lib/defaultPlugins')
 
@@ -60,6 +78,109 @@ test('util', (t) => {
     })
   })
 
+  t.test('@get', (t) => {
+    t.plan(2)
+
+    t.test('should be able to retrieve nested value', (t) => {
+      const obj = {
+        name: {
+          fullName: 'foo bar',
+          first: 'foo',
+          last: 'bar'
+        }
+      }
+
+      t.equal(get(obj, 'name.fullName'), 'foo bar')
+      t.end()
+    })
+
+    t.test('should be able to retrieve top level key', (t) => {
+      const obj = {
+        name: {
+          fullName: 'foo bar',
+          first: 'foo',
+          last: 'bar'
+        }
+      }
+
+      t.deepEqual(get(obj, 'name'), {
+        fullName: 'foo bar',
+        first: 'foo',
+        last: 'bar'
+      })
+      t.end()
+    })
+  })
+
+  t.test('@set', (t) => {
+    t.plan(2)
+
+    t.test('should be able to set nested keys', (t) => {
+      const obj = {
+        name: {
+          fullName: 'foo bar',
+          first: 'foo',
+          last: 'bar'
+        }
+      }
+
+      set(obj, 'name.fullName', 'bar foo')
+      t.equal(obj.name.fullName, 'bar foo')
+      t.end()
+    })
+
+    t.test('should be able to set top level keys', (t) => {
+      const obj = {
+        name: {
+          fullName: 'foo bar',
+          first: 'foo',
+          last: 'bar'
+        }
+      }
+
+      set(obj, 'name', 'bar foo')
+      t.equal(obj.name, 'bar foo')
+      t.end()
+    })
+  })
+
+  t.test('@getEditable', (t) => {
+    t.test('should be able to retreive correct information', (t) => {
+      const page = {
+        data: {
+          'filePath': `${path.resolve(__dirname, 'fixtures')}/render.sy`,
+          'outputPath': `${path.resolve(__dirname, 'output')}/render.html`,
+          'options': {
+            'title': 'Welcome to Sweeney!',
+            'tags': [
+              'sweeney',
+              'example'
+            ]
+          },
+          'content': '<div>\n  <div> {{ options.title }} </div>\n  <ul>\n    {{ options.tags.map((tag) => `<li>${tag}</li>`).join(\'\') }}\n  </ul>\n</div>\n',
+          'editable': [{
+            'filePath': '/Users/gabrielcsapo/Documents/sweeney/test/fixtures/render.sy',
+            'variableName': 'options.title',
+            'type': 'string'
+          }],
+          'name': 'render',
+          'collection': 'page',
+          'type': 'html'
+        }
+      }
+
+      t.deepEqual(getEditable(page), {
+        '/Users/gabrielcsapo/Documents/sweeney/test/fixtures/render.sy': {
+          'options.title': {
+            type: 'string',
+            value: 'Welcome to Sweeney!'
+          }
+        }
+      })
+      t.end()
+    })
+  })
+
   t.test('@escapeRegexValues', (t) => {
     t.plan(2)
 
@@ -103,7 +224,7 @@ test('util', (t) => {
       t.deepEqual(Object.keys(rendered), ['data', 'filePath', 'rendered', 'depends', 'time'])
       t.equal(typeof rendered.time, 'number')
       t.deepEqual(rendered.depends, [])
-      t.equal(rendered.rendered, '<div>   <ul>     <li>sweeney</li><li>example</li>   </ul> </div> ')
+      t.equal(rendered.rendered, '<div>   <div> Welcome to Sweeney! </div>   <ul>     <li>sweeney</li><li>example</li>   </ul> </div> ')
       t.equal(rendered.filePath, path.resolve(__dirname, './fixtures/render.sy'))
 
       t.end()
@@ -114,17 +235,17 @@ test('util', (t) => {
       const rendered = await render(defaultPlugins, [], parsed, {})
 
       t.equal(rendered.filePath, path.resolve(__dirname, './fixtures/sub.sy'))
-      t.equal(rendered.rendered, ' <div>    <div>   <div>   <ul>     <li>sweeney</li><li>example</li>   </ul> </div>  </div>    <div>   <ul>     <li>sweeney</li><li>example</li><li>sweeney</li><li>example</li>   </ul> </div>  </div> ')
+      t.equal(rendered.rendered, ' <div>    <div>   <div>   <div> Welcome to Sweeney! </div>   <ul>     <li>sweeney</li><li>example</li>   </ul> </div>  </div>    <div>   <div> Welcome to Sweeney! </div>   <ul>     <li>sweeney</li><li>example</li><li>sweeney</li><li>example</li>   </ul> </div>  </div> ')
       t.equal(rendered.depends.length, 2)
       t.equal(rendered.depends[0].filePath, path.resolve(__dirname, './fixtures/depend.sy'))
-      t.equal(rendered.depends[0].rendered, ' <div>   <div>   <ul>     <li>sweeney</li><li>example</li>   </ul> </div>  </div> ')
+      t.equal(rendered.depends[0].rendered, ' <div>   <div>   <div> Welcome to Sweeney! </div>   <ul>     <li>sweeney</li><li>example</li>   </ul> </div>  </div> ')
       t.equal(rendered.depends[0].depends.length, 1)
       t.equal(rendered.depends[0].depends[0].filePath, path.resolve(__dirname, './fixtures/render.sy'))
-      t.equal(rendered.depends[0].depends[0].rendered, '<div>   <ul>     <li>sweeney</li><li>example</li>   </ul> </div> ')
+      t.equal(rendered.depends[0].depends[0].rendered, '<div>   <div> Welcome to Sweeney! </div>   <ul>     <li>sweeney</li><li>example</li>   </ul> </div> ')
       t.equal(rendered.depends[0].depends[0].depends.length, 0)
 
       t.equal(rendered.depends[1].filePath, path.resolve(__dirname, './fixtures/render.sy'))
-      t.equal(rendered.depends[1].rendered, '<div>   <ul>     <li>sweeney</li><li>example</li><li>sweeney</li><li>example</li>   </ul> </div> ')
+      t.equal(rendered.depends[1].rendered, '<div>   <div> Welcome to Sweeney! </div>   <ul>     <li>sweeney</li><li>example</li><li>sweeney</li><li>example</li>   </ul> </div> ')
       t.equal(rendered.depends[1].depends.length, 0)
       t.end()
     })

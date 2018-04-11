@@ -1,8 +1,9 @@
 ---
 {
-  "collection": "pages",
-  "layout": "default",
-  "title": "Home"
+    "collection": "pages",
+    "layout": "default",
+    "title": "Home",
+    "type": "html"
 }
 ---
 
@@ -10,6 +11,6 @@
   <div>
     <img src="./sweeney.svg" alt="Sweeney Logo" class="sweeney-logo">
   </div>
-  <h1>{{-- editable site.description string --}}</h1>
+  <h1>{{ site.description }}</h1>
   <h3>Check out some of the <a href="posts.html">posts!</a></h3>
 </div>

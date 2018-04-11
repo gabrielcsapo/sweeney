@@ -15,6 +15,8 @@ test('@site', (t) => {
     t.deepEqual(site.files, [])
     t.deepEqual(site.rendered, [])
     t.deepEqual(site.config, {})
+
+    t.ok(site.plugins['editable'])
     t.ok(site.plugins['includes'])
     t.equal(typeof site.plugins['includes']['parse'], 'function')
     t.equal(typeof site.plugins['includes']['render'], 'function')
@@ -72,7 +74,14 @@ test('@site', (t) => {
             'example'
           ]
         },
-        'content': '<div>\n  <ul>\n    {{ options.tags.map((tag) => `<li>${tag}</li>`).join(\'\') }}\n  </ul>\n</div>\n',
+        'content': '<div>\n  <div> {{ options.title }} </div>\n  <ul>\n    {{ options.tags.map((tag) => `<li>${tag}</li>`).join(\'\') }}\n  </ul>\n</div>\n',
+        'editable': [
+          {
+            'filePath': '/Users/gabrielcsapo/Documents/sweeney/test/fixtures/render.sy',
+            'variableName': 'options.title',
+            'type': 'string'
+          }
+        ],
         'name': 'render',
         'collection': 'page',
         'type': 'html'

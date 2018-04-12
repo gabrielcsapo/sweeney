@@ -257,13 +257,14 @@ test('util', (t) => {
     t.test('should be able to parse file with options', async (t) => {
       const parsed = await parse(defaultPlugins, path.resolve(__dirname, './fixtures/test.sy'))
 
-      t.deepEqual({
+      t.deepEqual(parsed, {
         filePath: path.resolve(__dirname, 'fixtures/test.sy'),
         options: {
           title: 'Welcome to Sweeney!',
           tags: ['sweeney', 'example']
         },
         content: `<!DOCTYPE html>\n<html>\n\n{{-- includes ${path.resolve(__dirname, 'partials/head.html')} --}}\n\n<body style="display: flex;\nmin-height: 100vh;\nflex-direction: column;\nmargin: 0 auto;">\n\n{{-- includes ${path.resolve(__dirname, 'partials/header.html')} --}}\n\n<div class="page-content">\n  <div class="wrapper">\n    {{ content }}\n  </div>\n</div>\n\n{{-- includes ${path.resolve(__dirname, 'partials/footer.html')} --}}\n\n</body>\n\n</html>\n`,
+        rawContent: `<!DOCTYPE html>\n<html>\n\n{{-- includes ../partials/head.html --}}\n\n<body style="display: flex;\nmin-height: 100vh;\nflex-direction: column;\nmargin: 0 auto;">\n\n{{-- includes ../partials/header.html --}}\n\n<div class="page-content">\n  <div class="wrapper">\n    {{ content }}\n  </div>\n</div>\n\n{{-- includes ../partials/footer.html --}}\n\n</body>\n\n</html>\n`,
         name: 'test',
         includes: [
           path.resolve(__dirname, 'partials/head.html'),
@@ -272,14 +273,14 @@ test('util', (t) => {
         ],
         collection: 'page',
         type: 'html'
-      }, parsed)
+      })
 
       t.end()
     })
   })
 
   t.test('@templateToString', (t) => {
-    t.plan(1)
+    t.plan(2)
 
     t.test('should be able to turn template object back into a string', (t) => {
       const template = {
@@ -291,10 +292,31 @@ test('util', (t) => {
           title: 'Welcome to Sweeney!',
           tags: ['sweeney', 'example']
         },
-        content: '  <!DOCTYPE html>\n  <html>\n\n    {{-- includes /foo/partials/head.html --}}\n\n    <body style="display: flex;\n    min-height: 100vh;\n    flex-direction: column;\n    margin: 0 auto;">\n\n      {{-- includes /foo/partials/header.html --}}\n\n      <div class="page-content">\n        <div class="wrapper">\n          {{ content }}\n        </div>\n      </div>\n\n      {{-- includes /foo/partials/footer.html --}}\n\n    </body>\n\n  </html>\n'
+        content: '  <!DOCTYPE html>\n  <html>\n\n    {{-- includes /foo/partials/head.html --}}\n\n    <body style="display: flex;\n    min-height: 100vh;\n    flex-direction: column;\n    margin: 0 auto;">\n\n      {{-- includes /foo/partials/header.html --}}\n\n      <div class="page-content">\n        <div class="wrapper">\n          {{ content }}\n        </div>\n      </div>\n\n      {{-- includes /foo/partials/footer.html --}}\n\n    </body>\n\n  </html>\n',
+        rawContent: '  <!DOCTYPE html>\n  <html>\n\n    {{-- includes /foo/partials/head.html --}}\n\n    <body style="display: flex;\nmin-height: 100vh;\n    flex-direction: column;\n    margin: 0 auto;">\n\n      {{-- includes /foo/partials/header.html --}}\n\n      <div class="page-content">\n        <div class="wrapper">\n          {{ content }}\n        </div>\n      </div>\n\n      {{-- includes /foo/partials/footer.html --}}\n\n    </body>\n\n  </html>\n'
       }
 
-      t.equal(templateToString(template), '---\n{\n    "title": "Welcome to Sweeney!",\n    "tags": [\n        "sweeney",\n        "example"\n    ],\n    "type": "html"\n}\n---\n  <!DOCTYPE html>\n  <html>\n\n    {{-- includes /foo/partials/head.html --}}\n\n    <body style="display: flex;\n    min-height: 100vh;\n    flex-direction: column;\n    margin: 0 auto;">\n\n      {{-- includes /foo/partials/header.html --}}\n\n      <div class="page-content">\n        <div class="wrapper">\n          {{ content }}\n        </div>\n      </div>\n\n      {{-- includes /foo/partials/footer.html --}}\n\n    </body>\n\n  </html>')
+      t.equal(templateToString(template), '---\n{\n    "title": "Welcome to Sweeney!",\n    "tags": [\n        "sweeney",\n        "example"\n    ]\n}\n---\n  <!DOCTYPE html>\n  <html>\n\n    {{-- includes /foo/partials/head.html --}}\n\n    <body style="display: flex;\nmin-height: 100vh;\n    flex-direction: column;\n    margin: 0 auto;">\n\n      {{-- includes /foo/partials/header.html --}}\n\n      <div class="page-content">\n        <div class="wrapper">\n          {{ content }}\n        </div>\n      </div>\n\n      {{-- includes /foo/partials/footer.html --}}\n\n    </body>\n\n  </html>')
+
+      t.end()
+    })
+
+    t.test('should be able to turn template object back into a string with type in the options tag', (t) => {
+      const template = {
+        name: 'default',
+        includes: ['/foo/partials/head.html', '/foo/partials/header.html', '/foo/partials/footer.html'],
+        collection: 'page',
+        type: 'markdown',
+        options: {
+          title: 'Welcome to Sweeney!',
+          tags: ['sweeney', 'example'],
+          type: 'markdown'
+        },
+        content: '  <!DOCTYPE html>\n  <html>\n\n    {{-- includes /foo/partials/head.html --}}\n\n    <body style="display: flex;\n    min-height: 100vh;\n    flex-direction: column;\n    margin: 0 auto;">\n\n      {{-- includes /foo/partials/header.html --}}\n\n      <div class="page-content">\n        <div class="wrapper">\n          {{ content }}\n        </div>\n      </div>\n\n      {{-- includes /foo/partials/footer.html --}}\n\n    </body>\n\n  </html>\n',
+        rawContent: '  <!DOCTYPE html>\n  <html>\n\n    {{-- includes /foo/partials/head.html --}}\n\n    <body style="display: flex;\nmin-height: 100vh;\n    flex-direction: column;\n    margin: 0 auto;">\n\n      {{-- includes /foo/partials/header.html --}}\n\n      <div class="page-content">\n        <div class="wrapper">\n          {{ content }}\n        </div>\n      </div>\n\n      {{-- includes /foo/partials/footer.html --}}\n\n    </body>\n\n  </html>\n'
+      }
+
+      t.equal(templateToString(template), '---\n{\n    "title": "Welcome to Sweeney!",\n    "tags": [\n        "sweeney",\n        "example"\n    ],\n    "type": "markdown"\n}\n---\n  <!DOCTYPE html>\n  <html>\n\n    {{-- includes /foo/partials/head.html --}}\n\n    <body style="display: flex;\nmin-height: 100vh;\n    flex-direction: column;\n    margin: 0 auto;">\n\n      {{-- includes /foo/partials/header.html --}}\n\n      <div class="page-content">\n        <div class="wrapper">\n          {{ content }}\n        </div>\n      </div>\n\n      {{-- includes /foo/partials/footer.html --}}\n\n    </body>\n\n  </html>')
 
       t.end()
     })
@@ -351,7 +373,7 @@ test('util', (t) => {
   </html>
 `)
 
-      t.deepEqual({
+      t.deepEqual(parsed, {
         name: 'default',
         includes: ['/foo/partials/head.html', '/foo/partials/header.html', '/foo/partials/footer.html'],
         collection: 'page',
@@ -360,8 +382,9 @@ test('util', (t) => {
           title: 'Welcome to Sweeney!',
           tags: ['sweeney', 'example']
         },
-        content: '  <!DOCTYPE html>\n  <html>\n\n    {{-- includes /foo/partials/head.html --}}\n\n    <body style="display: flex;\n    min-height: 100vh;\n    flex-direction: column;\n    margin: 0 auto;">\n\n      {{-- includes /foo/partials/header.html --}}\n\n      <div class="page-content">\n        <div class="wrapper">\n          {{ content }}\n        </div>\n      </div>\n\n      {{-- includes /foo/partials/footer.html --}}\n\n    </body>\n\n  </html>\n'
-      }, parsed)
+        content: '  <!DOCTYPE html>\n  <html>\n\n    {{-- includes /foo/partials/head.html --}}\n\n    <body style="display: flex;\n    min-height: 100vh;\n    flex-direction: column;\n    margin: 0 auto;">\n\n      {{-- includes /foo/partials/header.html --}}\n\n      <div class="page-content">\n        <div class="wrapper">\n          {{ content }}\n        </div>\n      </div>\n\n      {{-- includes /foo/partials/footer.html --}}\n\n    </body>\n\n  </html>\n',
+        rawContent: `  <!DOCTYPE html>\n  <html>\n\n    {{-- includes ../partials/head.html --}}\n\n    <body style="display: flex;\n    min-height: 100vh;\n    flex-direction: column;\n    margin: 0 auto;">\n\n      {{-- includes ../partials/header.html --}}\n\n      <div class="page-content">\n        <div class="wrapper">\n          {{ content }}\n        </div>\n      </div>\n\n      {{-- includes ../partials/footer.html --}}\n\n    </body>\n\n  </html>\n`
+      })
 
       t.end()
     })
@@ -378,6 +401,7 @@ test('util', (t) => {
       t.deepEqual(parsed, {
         name: 'default',
         content: '\n        <div>\n          should do something\n        </div>\n      ',
+        rawContent: '\n        <div>\n          should do something\n        </div>\n      ',
         type: 'html',
         collection: 'page'
       })
@@ -415,6 +439,7 @@ test('util', (t) => {
         name: 'default',
         test: ['should do something'],
         content: '\n        <div>\n          {{-- test(\'should do something\') --}}\n        </div>\n      ',
+        rawContent: '\n        <div>\n          {{-- test(\'should do something\') --}}\n        </div>\n      ',
         type: 'html',
         collection: 'page'
       })

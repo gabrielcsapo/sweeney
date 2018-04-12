@@ -5,6 +5,7 @@
 }
 ---
 <div>
+  <div> {{-- editable options.title string --}} </div>
   <ul>
     {{ options.tags.map((tag) => `<li>${tag}</li>`).join('') }}
   </ul>

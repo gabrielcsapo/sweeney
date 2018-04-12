@@ -27,7 +27,7 @@ module.exports = async function() {
     projects,
     site: {
       main: './index.html',
-      'title':'Sweeney!',
+      title: 'Sweeney!',
       description: 'Welcome to your fresh cut site!',
       user: {
         name: 'Gabriel J. Csapo',

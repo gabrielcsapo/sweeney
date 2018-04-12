@@ -1,3 +1,12 @@
+# 1.2.2 (04/11/2018)
+
+- if you edit something using editable view, it will write the wrong template to disk (this is fixed)
+  - makes sure that `templateToString` outputs the right content
+    - exports `rawContent` on page when parsed which ensures plugins did not alter the content
+- makes sure if the user had quotes on a variable in `.sweeney` that same quote / or not quote is persisted if updated.
+  - this ensures if the value was a number it will be properly written
+- `templateToString` does not write type unless it was in options
+ 
 # 1.2.1 (04/11/2018)
 
 - removes `makeSearchable` migrates to `get` instead

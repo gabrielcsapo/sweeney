@@ -42,6 +42,7 @@ test('@site', (t) => {
           'type': 'page'
         },
         'content': `\n<div>\n  {{-- includes ${path.resolve(__dirname, 'fixtures')}/render.sy --}}\n</div>\n`,
+        'rawContent': `\n<div>\n  {{-- includes ./render.sy --}}\n</div>\n`,
         'name': 'depend',
         'includes': [
           `${path.resolve(__dirname, 'fixtures')}/render.sy`
@@ -56,6 +57,7 @@ test('@site', (t) => {
           'type': 'layout'
         },
         'content': `\n<!DOCTYPE html>\n<html>\n\n  <head>\n      <meta charset="utf-8">\n      <meta name="viewport" content="width=device-width initial-scale=1" />\n      <meta http-equiv="X-UA-Compatible" content="IE=edge">\n\n      <title>{{ options.title || site.title }}</title>\n      {{-- includes ${__dirname}/site.css --}}\n      <meta name="description" content="{{ site.description }}">\n  </head>\n\n\n  <body>\n    {{-- includes ${path.resolve(__dirname, 'fixtures')}/nav.sy --}}\n\n    <div class="top-rect"></div>\n    <div class="page">\n      <div class="page-centered-content">\n        {{ child }}\n      </div>\n\n      <div class="footer">\n        <div> created with ☕️ by <a class="footer-link" href="{{ site.user.github_url }}">{{ site.user.name }}</a> </div>\n      </div>\n    </div>\n  </body>\n\n</html>\n`,
+        'rawContent': `\n<!DOCTYPE html>\n<html>\n\n  <head>\n      <meta charset="utf-8">\n      <meta name="viewport" content="width=device-width initial-scale=1" />\n      <meta http-equiv="X-UA-Compatible" content="IE=edge">\n\n      <title>{{ options.title || site.title }}</title>\n      {{-- includes ../site.css --}}\n      <meta name="description" content="{{ site.description }}">\n  </head>\n\n\n  <body>\n    {{-- includes ./nav.sy --}}\n\n    <div class="top-rect"></div>\n    <div class="page">\n      <div class="page-centered-content">\n        {{ child }}\n      </div>\n\n      <div class="footer">\n        <div> created with ☕️ by <a class="footer-link" href="{{ site.user.github_url }}">{{ site.user.name }}</a> </div>\n      </div>\n    </div>\n  </body>\n\n</html>\n`,
         'name': 'includes',
         'includes': [
           `${path.resolve(__dirname)}/site.css`,
@@ -75,6 +77,7 @@ test('@site', (t) => {
           ]
         },
         'content': '<div>\n  <div> {{ options.title }} </div>\n  <ul>\n    {{ options.tags.map((tag) => `<li>${tag}</li>`).join(\'\') }}\n  </ul>\n</div>\n',
+        'rawContent': '<div>\n  <div> {{-- editable options.title string --}} </div>\n  <ul>\n    {{ options.tags.map((tag) => `<li>${tag}</li>`).join(\'\') }}\n  </ul>\n</div>\n',
         'editable': [
           {
             'filePath': '/Users/gabrielcsapo/Documents/sweeney/test/fixtures/render.sy',
@@ -93,6 +96,7 @@ test('@site', (t) => {
           'type': 'page'
         },
         'content': `\n<div>\n  {{-- includes ${path.resolve(__dirname, 'fixtures')}/depend.sy --}}\n  {{-- includes ${path.resolve(__dirname, 'fixtures')}/render.sy --}}\n</div>\n`,
+        'rawContent': `\n<div>\n  {{-- includes ./depend.sy --}}\n  {{-- includes ./render.sy --}}\n</div>\n`,
         'name': 'sub',
         'includes': [
           `${path.resolve(__dirname, 'fixtures')}/depend.sy`,
@@ -112,6 +116,7 @@ test('@site', (t) => {
           ]
         },
         'content': `<!DOCTYPE html>\n<html>\n\n{{-- includes ${__dirname}/partials/head.html --}}\n\n<body style="display: flex;\nmin-height: 100vh;\nflex-direction: column;\nmargin: 0 auto;">\n\n{{-- includes ${__dirname}/partials/header.html --}}\n\n<div class="page-content">\n  <div class="wrapper">\n    {{ content }}\n  </div>\n</div>\n\n{{-- includes ${__dirname}/partials/footer.html --}}\n\n</body>\n\n</html>\n`,
+        'rawContent': `<!DOCTYPE html>\n<html>\n\n{{-- includes ../partials/head.html --}}\n\n<body style="display: flex;\nmin-height: 100vh;\nflex-direction: column;\nmargin: 0 auto;">\n\n{{-- includes ../partials/header.html --}}\n\n<div class="page-content">\n  <div class="wrapper">\n    {{ content }}\n  </div>\n</div>\n\n{{-- includes ../partials/footer.html --}}\n\n</body>\n\n</html>\n`,
         'name': 'test',
         'includes': [
           `${__dirname}/partials/head.html`,
@@ -132,6 +137,7 @@ test('@site', (t) => {
           ]
         },
         'content': '<div>\n  <ul>\n    {{ tagss.map((tag) => `<li>${tag}</li>`)}}\n  </ul>\n</div>\n',
+        'rawContent': '<div>\n  <ul>\n    {{ tagss.map((tag) => `<li>${tag}</li>`)}}\n  </ul>\n</div>\n',
         'name': 'throws-error',
         'collection': 'page',
         'type': 'html'

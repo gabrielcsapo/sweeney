@@ -1,3 +1,11 @@
+# 1.3.0 (04/11/2018)
+
+- css files can now be interpreted by the editable plugin when they change their extension to `sy` and set the type to `css`
+- includes now outputs css styles with proper type tag (type='text/css')
+- the editable plugin now allows type color to be passed
+- the save action for form submission in serve is now actually async (it wasn't before, sometimes it would write sometimes it wouldn't)
+- get and set now support mixed object access forms such as `obj.name` or `obj['name']` or `obj["name"]`
+
 # 1.2.2 (04/11/2018)
 
 - if you edit something using editable view, it will write the wrong template to disk (this is fixed)
@@ -6,7 +14,7 @@
 - makes sure if the user had quotes on a variable in `.sweeney` that same quote / or not quote is persisted if updated.
   - this ensures if the value was a number it will be properly written
 - `templateToString` does not write type unless it was in options
- 
+
 # 1.2.1 (04/11/2018)
 
 - removes `makeSearchable` migrates to `get` instead

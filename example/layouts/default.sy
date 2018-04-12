@@ -13,7 +13,7 @@
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
       <title>{{-- editable options.title || site.title string --}}</title>
-      {{-- includes ../site.css --}}
+      {{-- includes ../styles/site.sy --}}
       <meta name="description" content="{{ site.description }}">
   </head>
 

@@ -32,6 +32,11 @@ module.exports = async function() {
       user: {
         name: 'Gabriel J. Csapo',
         github_url: 'https://www.github.com/gabrielcsapo'
+      },
+      colors: {
+        'button-border':'#b3b3b3',
+        'top-rect-start': '#1a1a1a',
+        'top-rect-end': '#3e3e3e'
       }
     },
     include: [

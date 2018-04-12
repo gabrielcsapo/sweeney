@@ -1,3 +1,9 @@
+---
+{
+  "type": "css"
+}
+---
+
 * {
   font-family: Baskerville;
   font-weight: normal;
@@ -17,8 +23,8 @@ html, body {
   top: 0;
   right: 0;
   z-index: -1;
-  background-color: #3e3e3e;
-  background: linear-gradient(to bottom right, #3e3e3e, #1a1a1a);
+  background-color: {{-- editable site.colors['top-rect-start'] color --}};
+  background: linear-gradient(to bottom right, {{-- editable site.colors['top-rect-start'] color --}}, {{-- editable site.colors['top-rect-end'] color --}});
   overflow: hidden;
   overflow-x: hidden;
   overflow-y: hidden;
@@ -113,7 +119,7 @@ html, body {
 }
 
 .nav > .button {
-  border-color: #fff;
+  border-color: {{-- editable site.colors['button-border'] color --}};
   color: #fff;
   font-size: 16px;
 }
@@ -136,11 +142,6 @@ html, body {
   transition: opacity 200ms;
   text-align: center;
   margin: 10px 5px;
-}
-
-.button-getting-started {
-  width: 160px;
-  margin-top: 15px;
 }
 
 .button:hover {

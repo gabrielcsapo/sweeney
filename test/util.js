@@ -527,7 +527,7 @@ test('util', (t) => {
         'posts',
         'posts.sy',
         'projects.sy',
-        'site.css',
+        'styles',
         'sweeney.svg'
       ])
 

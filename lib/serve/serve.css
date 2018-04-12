@@ -5,11 +5,11 @@
   flex-wrap: wrap;
 }
 .editable-body__sidebar {
-  width: 10%;
+  width: 15%;
   z-index: 1000;
 }
 .editable-body__page {
-  width: 90%;
+  width: 85%;
   position: relative;
   margin: 0 auto;
 }
@@ -50,6 +50,18 @@
   height: 25px;
   padding: 3px;
   margin: 3px 0;
+}
+
+.development-toast {
+  padding: 10px;
+  text-align: center;
+  border: 1px solid #e8e8e8;
+  background-color: #fff;
+  z-index: 10000;
+  margin: 10px;
+  position: absolute;
+  bottom: 0;
+  right: 0;
 }
 
 .navigation-controls {

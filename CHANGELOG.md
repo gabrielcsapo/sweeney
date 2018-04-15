@@ -1,9 +1,9 @@
 # 1.3.1 (04/11/2018)
 
-- fixes issue with development-toast being hidden behind page text
-  - abstracts development-toast styles into serve.css
+- fixes issue with `development-toast` being hidden behind page text
+  - abstracts `development-toast` styles into serve.css
 - makes sure that files that are not html are served as binary assets
-  - fixes issue with .woff and other binary files not being read properly
+  - fixes issue with `.woff` and other binary files not being read properly
 
 # 1.3.0 (04/11/2018)
 

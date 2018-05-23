@@ -12,6 +12,7 @@ const readdir = promisify(fs.readdir)
 
 const {
   ms,
+  time,
   merge,
   set,
   get,
@@ -714,6 +715,30 @@ test('util', (t) => {
 
     t.test('days', (t) => {
       t.equal(ms(600000000), '6d')
+      t.end()
+    })
+  })
+
+  t.test('time', (t) => {
+    t.plan(2)
+
+    t.test('should work with async function', async (t) => {
+      const _time = await time(async () => {
+        return new Promise(function (resolve, reject) {
+          setTimeout(() => {
+            resolve()
+          }, 3000)
+        })
+      })
+      t.equal(_time, '3s')
+      t.end()
+    })
+
+    t.test('should work with sync function', async (t) => {
+      const _time = await time(() => {
+        // doing nothing
+      })
+      t.ok(_time.substring(0, 3), '0.0')
       t.end()
     })
   })

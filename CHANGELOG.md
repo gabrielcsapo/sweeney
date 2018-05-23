@@ -1,3 +1,7 @@
+# 1.3.2 (05/23/2018)
+
+- cleans up timing logic
+
 # 1.3.1 (04/11/2018)
 
 - fixes issue with `development-toast` being hidden behind page text

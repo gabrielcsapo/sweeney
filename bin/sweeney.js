@@ -8,7 +8,7 @@ const { version } = require('../package.json')
 const Site = require('../lib/site')
 const Serve = require('../lib/serve/serve')
 
-const { ms, getConfig, copyDirectory, renderSubDepends } = require('../lib/util')
+const { time, getConfig, copyDirectory, renderSubDepends } = require('../lib/util')
 
 process.on('unhandledRejection', (error) => {
   console.error(`Error: \n ${error.stack}`); // eslint-disable-line
@@ -82,13 +82,13 @@ async function getConfigInDirectory () {
 (async function () {
   try {
     if (program.new) {
-      const start = process.hrtime()
       const directory = process.cwd()
 
-      await copyDirectory(path.resolve(__dirname, '..', 'example'), directory)
-      const end = process.hrtime(start)
+      const _time = await time(async () => {
+        await copyDirectory(path.resolve(__dirname, '..', 'example'), directory)
+      })
 
-      process.stdout.write(`application bootstrapped in ${directory} [${ms(((end[0] * 1e9) + end[1]) / 1e6)}]`)
+      process.stdout.write(`application bootstrapped in ${directory} [${_time}]`)
       process.exit(1)
     }
 
@@ -100,21 +100,19 @@ async function getConfigInDirectory () {
     const site = new Site(config)
 
     if (program.build) {
-      const start = process.hrtime()
+      const _time = await time(async () => {
+        await site.build()
 
-      await site.build()
-
-      if (config.include) {
-        config.include.forEach((i) => {
-          copyDirectory(path.resolve(config.source, i), config.output + i.substr(i.lastIndexOf('/'), i.length))
-        })
-      }
-
-      const end = process.hrtime(start)
+        if (config.include) {
+          config.include.forEach((i) => {
+            copyDirectory(path.resolve(config.source, i), config.output + i.substr(i.lastIndexOf('/'), i.length))
+          })
+        }
+      })
 
       // replace the source path with nothing so that we don't get a bunch of duplicate strings
       process.stdout.write(`
-        site built at ${config.output} [${ms(((end[0] * 1e9) + end[1]) / 1e6)}]
+        site built at ${config.output} [${_time}]
         ${site.rendered.map((top) => '\n' + renderSubDepends(top, 0).replace(new RegExp(config.source + '/', 'g'), '')).join('')}
       `.trim() + '\n\n')
     }
@@ -151,14 +149,12 @@ async function getConfigInDirectory () {
 
         // we don't want to rebuild the output directory because this is expected to change
         if (file.substring(0, file.lastIndexOf('/')) !== site.output.substring(site.output.lastIndexOf('/') + 1, site.output.length) && file.indexOf('.git') === -1) {
-          const start = process.hrtime()
-
-          await site.build()
-
-          const end = process.hrtime(start)
+          const _time = await time(async () => {
+            await site.build()
+          })
 
           process.stdout.write(`
-            site rebuilt in [${ms(((end[0] * 1e9) + end[1]) / 1e6)}] because of ${ev} of ${file}
+            site rebuilt in [${_time}] because of ${ev} of ${file}
             ${site.rendered.map((top) => '\n' + renderSubDepends(top, 0).replace(new RegExp(config.source + '/', 'g'), '')).join('')}
           `.trim() + '\n\n')
         }

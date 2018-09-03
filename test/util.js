@@ -521,7 +521,7 @@ test('util', (t) => {
       const files = await readdir(destination)
 
       t.deepEqual(files, [
-        '.sweeney',
+        '.sweeney.js',
         'about.sy',
         'index.sy',
         'layouts',

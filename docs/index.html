@@ -268,9 +268,10 @@ module.exports = async function() {
 
           <pre class="code-example">
 const path = require('path');
+const Plugin = require('sweeney/lib/plugin');
 
-module.exports.include = {
-  parse: async function(filePath, content) {
+module.exports.include = class IncludePlugin extends Plugin {
+  static async parse(filePath, content) {
     // we are looking for the pattern {{-- includes ... }} in the template
     // this could be any pattern, it does not need to look like the handlebars syntax it could be [[== includes ... ==]]
     // that is the extensibility of the plugin architecture
@@ -295,8 +296,8 @@ module.exports.include = {
       };
     }
     return false;
-  },
-  render: async function(plugins, filePath, content, templates, data, found) {
+  }
+  static async render(plugins, filePath, content, templates, data, found) {
     const start = process.hrtime();
     let ext = found.substring(found.lastIndexOf('.') + 1, found.length);
     let name = found.substring(found.lastIndexOf('/') + 1, found.length - 3);

@@ -8,7 +8,7 @@ const { version } = require('../package.json')
 const Site = require('../lib/site')
 const Serve = require('../lib/serve/serve')
 
-const { time, getConfig, copyDirectory, renderSubDepends } = require('../lib/util')
+const { time, getConfig, copyDirectory, renderSubDepends, ensureDirectoryExists } = require('../lib/util')
 
 process.on('unhandledRejection', (error) => {
   console.error(`Error: \n ${error.stack}`); // eslint-disable-line
@@ -50,9 +50,12 @@ const program = woof(`
     },
     output: {
       type: 'string',
-      validate: function (value) {
-        const stats = fs.statSync(value)
-        return !stats.isDirectory() ? `please provide a valid directory path. \n ${value} is not a valid path.` : true// ensure that this is a directory
+      validate: async function (value) {
+        const fullPath = path.resolve(__dirname, value)
+        await ensureDirectoryExists(fullPath)
+        const stats = fs.statSync(fullPath)
+
+        return !stats.isDirectory() ? `please provide a valid directory path. \n ${fullPath} is not a valid path.` : true// ensure that this is a directory
       }
     },
     port: {

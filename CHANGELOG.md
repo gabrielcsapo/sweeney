@@ -1,3 +1,9 @@
+# 1.4.0 (09/02/2018)
+
+- add support for parsing of `.sweeney.js` and `.sweeney` file paths.
+- adds a plugin interface
+- fix issue with generating unneeded files to disk
+
 # 1.3.2 (05/23/2018)
 
 - cleans up timing logic

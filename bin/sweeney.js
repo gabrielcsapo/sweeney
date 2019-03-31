@@ -29,7 +29,7 @@ const program = woof(`
     -v, --version              Display the current version of sweeney
 
     -p, --port [port]          Overrides the randomized port for serve
-    -s, --source [path]     Overrides the default path which is the current working directory
+    -s, --source [path]        Overrides the default path which is the current working directory
     -o, --output [path]        Overrides the output path
     -w, --watch                Will watch the directory used to generate site and build when changes are made.
                                If this is used in tandem with serve, it will inject javascript to reload the page when changes were made.

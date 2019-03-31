@@ -1,3 +1,8 @@
+# 1.4.1 (03/31/2019)
+
+- removes unnecessary console.log
+- fixes help formatting
+
 # 1.4.0 (09/02/2018)
 
 - add support for parsing of `.sweeney.js` and `.sweeney` file paths.

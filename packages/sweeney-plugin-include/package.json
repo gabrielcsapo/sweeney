@@ -1,0 +1,15 @@
+{
+  "name": "@sweeney/plugin-include",
+  "version": "0.0.1",
+  "description": "Sweeney plugin to it possible to include sub pages and content.",
+  "author": "Gabriel J. Csapo <gabecsapo@gmail.com>",
+  "homepage": "https://sweeneyjs.com",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": "https://github.com/gabrielcsapo/sweeney/tree/master/packages/sweeney-plugin-include",
+  "dependencies": {
+    "@sweeney/core": "0.0.1"
+  }
+}

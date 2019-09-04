@@ -1,0 +1,24 @@
+{
+  "name": "@sweeney/example",
+  "version": "0.0.1",
+  "description": "Sweeney example.",
+  "author": "Gabriel J. Csapo <gabecsapo@gmail.com>",
+  "homepage": "https://sweeneyjs.com",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "dev": "sweeney serve --source ./src",
+    "build": "sweeney build --output ../../docs/example --source ./src"
+  },
+  "repository": "https://github.com/gabrielcsapo/sweeney/tree/master/packages/sweeney-docs",
+  "dependencies": {
+    "@sweeney/cli": "0.0.1",
+    "@sweeney/plugin-include": "0.0.1",
+    "@sweeney/plugin-editable": "0.0.1"
+  },
+  "devDependencies": {
+    "markdown-it": "^9.1.0"
+  }
+}

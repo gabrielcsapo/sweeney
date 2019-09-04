@@ -1,0 +1,19 @@
+{
+  "name": "@sweeney/cli",
+  "version": "0.0.1",
+  "description": "Sweeney command line.",
+  "author": "Gabriel J. Csapo <gabecsapo@gmail.com>",
+  "homepage": "https://sweeneyjs.com",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": "https://github.com/gabrielcsapo/sweeney/tree/master/packages/sweeney-cli",
+  "dependencies": {
+    "@sweeney/core": "0.0.1",
+    "woof": "^0.3.0"
+  },
+  "bin": {
+    "sweeney": "./bin/sweeney.js"
+  }
+}

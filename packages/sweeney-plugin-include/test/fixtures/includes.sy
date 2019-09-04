@@ -1,0 +1,36 @@
+---
+{
+  "type": "layout"
+}
+---
+
+<!DOCTYPE html>
+<html>
+
+  <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width initial-scale=1" />
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+      <title>{{ options.title || site.title }}</title>
+      {{-- includes ../site.css --}}
+      <meta name="description" content="{{ site.description }}">
+  </head>
+
+
+  <body>
+    {{-- includes ./nav.sy --}}
+
+    <div class="top-rect"></div>
+    <div class="page">
+      <div class="page-centered-content">
+        {{ child }}
+      </div>
+
+      <div class="footer">
+        <div> created with ☕️ by <a class="footer-link" href="{{ site.user.github_url }}">{{ site.user.name }}</a> </div>
+      </div>
+    </div>
+  </body>
+
+</html>

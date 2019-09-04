@@ -10,18 +10,6 @@ html, body {
   padding: 0;
 }
 
-.top-banner {
-  width: 100%;
-  line-height: 50px;
-  font-size: 20px;
-  top: 0;
-  padding: 10px;
-  text-align: center;
-  border-top: 1px solid #9c9c9c;
-  border-bottom: 1px solid #9c9c9c;
-  background-color: #efefef;
-}
-
 .top-rect {
   width: 100%;
   padding-top: 300px;
@@ -136,8 +124,8 @@ html, body {
 .button {
   font-weight: 600;
   display: inline-block;
-  padding: 10px;
-  min-width: 130px;
+  padding: 8px 0;
+  width: 130px;
   color: #3e3e3e;
   border: 1px solid #3e3e3e;
   border-radius: 5px;
@@ -197,19 +185,15 @@ code {
 
 .footer {
   width: 100%;
-  border-top: 1px solid #acacac;
-  background: linear-gradient(to bottom right, #3e3e3e, #1a1a1a);
-  color: #dedede;
-  position: absolute;
-  right: 0;
+  border-top: 1px solid rgba(62, 62, 62, 0.30);
   text-align: center;
-  font-size: 14px;
   margin-top: 20px;
-  line-height: 60px;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 .footer-link {
-  color: #dedede;
+  color: black;
   font-weight: bold;
   text-decoration: none;
 }

@@ -1,0 +1,12 @@
+{
+  "name": "@sweeney/plugin-editable",
+  "version": "0.0.1",
+  "description": "Sweeney plugin to make content editable when serving.",
+  "author": "Gabriel J. Csapo <gabecsapo@gmail.com>",
+  "homepage": "https://sweeneyjs.com",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": "https://github.com/gabrielcsapo/sweeney/tree/master/packages/sweeney-plugin-editable"
+}

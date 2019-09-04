@@ -1,0 +1,19 @@
+{
+  "name": "@sweeney/core",
+  "version": "0.0.1",
+  "description": "Sweeney core functionality.",
+  "author": "Gabriel J. Csapo <gabecsapo@gmail.com>",
+  "homepage": "https://sweeneyjs.com",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": "https://github.com/gabrielcsapo/sweeney/tree/master/packages/sweeney-core",
+  "dependencies": {
+    "formidable": "^1.2.1"
+  },
+  "devDependencies": {
+    "@sweeney/plugin-editable": "0.0.1",
+    "@sweeney/plugin-editable": "0.0.1"
+  }
+}

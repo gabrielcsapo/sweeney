@@ -1,46 +1,46 @@
-const markdown = require('markdown-it')();
+const markdown = require("markdown-it")();
 
 async function getProjects() {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
-      resolve([{
-        name: 'sweeney',
-        description: '💈 a blog aware, static site generator',
-        url: 'http://www.gabrielcsapo.com/sweeney'
-      }]);
+      resolve([
+        {
+          name: "sweeney",
+          description: "💈 a blog aware, static site generator",
+          url: "https://gabrielcsapo.github.io/sweeney",
+        },
+      ]);
     });
   });
 }
 
-module.exports = async function() {
+module.exports = async function () {
   const projects = await getProjects();
 
   return {
     render: (type, content) => {
-      if(type == 'markdown') {
+      if (type == "markdown") {
         return markdown.render(content);
       }
       return content;
     },
-    source: './',
-    output: './site',
+    source: "./",
+    output: "./site",
     projects,
     site: {
-      main: './index.html',
-      title: 'Sweeney!',
-      description: 'Welcome to your fresh cut site!',
+      main: "./index.html",
+      title: "Sweeney!",
+      description: "Welcome to your fresh cut site!",
       user: {
-        name: 'Gabriel J. Csapo',
-        github_url: 'https://www.github.com/gabrielcsapo'
+        name: "Gabriel J. Csapo",
+        github_url: "https://www.github.com/gabrielcsapo",
       },
       colors: {
-        'button-border':'#b3b3b3',
-        'top-rect-start': '#1a1a1a',
-        'top-rect-end': '#3e3e3e'
-      }
+        "button-border": "#b3b3b3",
+        "top-rect-start": "#1a1a1a",
+        "top-rect-end": "#3e3e3e",
+      },
     },
-    include: [
-      './sweeney.svg'
-    ]
+    include: ["./sweeney.svg"],
   };
 };
